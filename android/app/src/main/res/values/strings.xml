@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pulp News</string>
+    <string name="news_channel_name">News Notifications</string>
+    <string name="news_channel_description">Notifications for new news articles</string>
+</resources>

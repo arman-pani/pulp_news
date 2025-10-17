@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Allow local development host -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">10.116.21.221</domain> <!-- if using your Mac's local IP -->
+        <domain includeSubdomains="true">192.168.29.107</domain>
+    </domain-config>
+</network-security-config>
