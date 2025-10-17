@@ -18,7 +18,7 @@ Closed testing badge:
 
 Demo video (short walk-through):
 
-[![Demo video](images/home_page.jpeg)](images/demo_video.mp4)
+[![Demo video](images/home_page.jpeg)](https://youtube.com/shorts/7MPF2LOIfCk)
 
 > Release status: Pulp News is currently in closed testing. The app is scheduled for production release in a few days — monitoring feedback and stability before rolling out publicly.
 
