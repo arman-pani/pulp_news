@@ -3,7 +3,24 @@
 
 Pulp News is a cross-platform mobile application built with Flutter that delivers concise, localized news summaries in users' native languages. The app aggregates content from public sources, uses lightweight server-side scraping and retrieval, and leverages language models to produce clear, readable summaries optimized for mobile consumption.
 
+<!-- Side-by-side screenshots: Home | Explore | Category -->
+<p align="center">
+	<img src="images/home_page.jpeg" alt="Home page" width="30%" style="margin-right:8px;"/>
+	<img src="images/explore_page.jpeg" alt="Explore page" width="30%" style="margin-right:8px;"/>
+	<img src="images/category_page.jpeg" alt="Category page" width="30%" />
+</p>
+
 This repository contains the Flutter front-end and backend glue (Firebase, Cloud Functions, and Cloud SQL) used to power realtime updates, authentication, notifications, and summarization orchestration.
+
+Closed testing badge:
+
+![Closed Testing](images/pulp_news_closed_testing.png)
+
+Demo video (short walk-through):
+
+[![Demo video](images/home_page.jpeg)](images/demo_video.mp4)
+
+> Release status: Pulp News is currently in closed testing. The app is scheduled for production release in a few days — monitoring feedback and stability before rolling out publicly.
 
 ## Key Features
 
@@ -41,26 +58,9 @@ This repository contains the Flutter front-end and backend glue (Firebase, Cloud
 
 Below are screenshots of the app pages (Home, Explore, Category) and a short demo video showing the app in action.
 
-Home page (fast personalized feed):
 
-![Home page](images/home_page.jpeg)
 
-Explore page (discover topics and sources):
 
-![Explore page](images/explore_page.jpeg)
 
-Category page (local language summaries):
-
-![Category page](images/category_page.jpeg)
-
-Closed testing badge:
-
-![Closed Testing](images/pulp_news_closed_testing.png)
-
-Demo video (short walk-through):
-
-[![Demo video](images/home_page.jpeg)](images/demo_video.mp4)
-
-> Release status: Pulp News is currently in closed testing. The app is scheduled for production release in a few days — monitoring feedback and stability before rolling out publicly.
 
 
