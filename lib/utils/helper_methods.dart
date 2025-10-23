@@ -1,10 +1,37 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/constants/app_strings.dart';
 import 'package:odiya_news_app/models/news_model.dart';
+import 'package:odiya_news_app/utils/dialogs.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:odiya_news_app/utils/app_router.dart';
+
+Future<void> checkAppVersion(BuildContext context) async {
+  final remoteConfig = FirebaseRemoteConfig.instance;
+
+  await remoteConfig.fetchAndActivate();
+
+  final latestVersion = remoteConfig.getString('latest_version');
+  final latestBuild = remoteConfig.getInt('latest_build');
+  final minSupportedBuild = remoteConfig.getInt('min_supported_build');
+
+  final packageInfo = await PackageInfo.fromPlatform();
+  final currentVersion = packageInfo.version; // e.g. "1.0.0"
+  final currentBuild = int.parse(packageInfo.buildNumber); // e.g. 2
+
+  debugPrint('Current: $currentVersion+$currentBuild | Latest: $latestVersion+$latestBuild');
+
+  if (currentBuild < minSupportedBuild) {
+    // 🚨 Force update
+    showForceUpdateDialog(context, true);
+  } else if (currentBuild < latestBuild) {
+    // ⚠️ Optional update
+    showForceUpdateDialog(context, false);
+  }
+}
 
 Future<void> launchSourceUrl(String sourceUrl, BuildContext context) async {
   try {

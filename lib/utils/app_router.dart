@@ -14,6 +14,7 @@ import 'package:odiya_news_app/search/search_page.dart';
 import 'package:odiya_news_app/pages/web_view_page.dart';
 import 'package:odiya_news_app/profile/pages/settings_page.dart';
 import 'package:odiya_news_app/utils/app_handler.dart';
+import 'package:odiya_news_app/utils/helper_methods.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -26,8 +27,8 @@ Future<void> setupRouter() async {
   final completed = await hasCompletedOnboarding();
 
   goRouter = GoRouter(
-    initialLocation: '/india-map',
-    // initialLocation: completed ? '/explore' : '/onboarding',
+    // initialLocation: '/india-map',
+    initialLocation: completed ? '/explore' : '/onboarding',
     navigatorKey: _rootNavigatorKey,
     routes: [
       GoRoute(
@@ -145,6 +146,13 @@ Future<void> setupRouter() async {
       ),
     ],
   );
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final context = _rootNavigatorKey.currentContext;
+    if (context != null && context.mounted) {
+      checkAppVersion(context);
+    }
+  });
 }
 
 class AppRoutes {

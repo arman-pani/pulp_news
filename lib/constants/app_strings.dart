@@ -17,6 +17,8 @@ class AppStrings {
   static const String privacyPolicyDescription = 'Read our privacy policy';
   static const String selectLanguage = 'Select Language';
   static const String english = 'English';
+  static const String userFeedback = 'User Feedback';
+  static const String userFeedbackDescription = 'Submit your suggestions';
   
   // Theme Options
   static const String lightTheme = 'Light';
@@ -90,4 +92,6 @@ class AppStrings {
 
   static const String aboutUsUrl = 'https://sites.google.com/view/pulpnews/about-us';
   static const String privacyPolicyUrl = 'https://sites.google.com/view/pulpnews/privacy-policy';
+  static const String userFeedbackUrl = 'https://forms.gle/qJ164vyybidEdKHJ7';
+  static const String playStoreUrl = 'https://play.google.com/store/apps/details?id=com.pulpnews.app';
 }

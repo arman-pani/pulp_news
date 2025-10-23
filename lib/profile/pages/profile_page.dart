@@ -4,6 +4,7 @@ import 'package:odiya_news_app/constants/app_strings.dart';
 import 'package:odiya_news_app/utils/app_router.dart';
 import 'package:odiya_news_app/utils/helper_methods.dart';
 import 'package:odiya_news_app/profile/widgets/settings_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -39,9 +40,9 @@ class ProfilePage extends StatelessWidget {
               const Divider(),
               _buildSettings(context),
               const Divider(),
+              _buildFeedback(context),
+              const Divider(),
               _buildAboutUs(context),
-              // const Divider(),
-              // _buildHelpSupport(context),
               const Divider(),
               _buildPrivacyPolicy(context),
             ],
@@ -81,14 +82,14 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  // Widget _buildHelpSupport(BuildContext context) {
-  //   return SettingsTile(
-  //     leadingIcon: Icons.help_outline,
-  //     title: AppStrings.helpSupport,
-  //     subtitle: 'Get help and contact support',
-  //     onTap: () => _showHelpSupportDialog(context),
-  //   );
-  // }
+  Widget _buildFeedback(BuildContext context) {
+    return SettingsTile(
+      leadingIcon: Icons.feedback_outlined,
+      title: AppStrings.userFeedback,
+      subtitle: AppStrings.userFeedbackDescription,
+      onTap: () => launchUrl(Uri.parse(AppStrings.userFeedbackUrl))
+    );
+  }
 
   Widget _buildPrivacyPolicy(BuildContext context) {
     return SettingsTile(

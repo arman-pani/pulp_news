@@ -2,7 +2,7 @@ name: odiya_news_app
 description: "Pulp News - Your trusted source for fresh, summarized local news in your language. Stay informed with the latest stories from credible sources, carefully curated and presented in short, easy-to-read summaries."
 publish_to: 'none' 
 
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ^3.8.1
@@ -33,6 +33,11 @@ dependencies:
   firebase_messaging: ^16.0.2
   flutter_local_notifications: ^19.4.2
   webview_flutter: ^4.10.1
+  xml: ^6.6.1
+  touchable: ^1.0.2
+  svg_path_parser: ^1.1.2
+  firebase_remote_config: ^6.1.0
+  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:
