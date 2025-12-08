@@ -20,6 +20,8 @@ class FCMService extends GetxService {
 
   String? fcmToken;
   bool _initialized = false;
+  bool _tokenRegistrationInProgress = false;
+  bool _shouldRetryRegistration = false;
 
   Future<void> initializeIfNeeded() async {
     if (_initialized) return;
@@ -52,12 +54,35 @@ class FCMService extends GetxService {
       fcmToken = await _messaging.getToken();
       if (fcmToken != null) {
         hiveService.storeFCMToken(fcmToken!);
-        _notificationRepo.registerFCMToken(fcmToken!);
+        // Register token in background without blocking
+        _registerTokenInBackground(fcmToken!);
       }
       debugPrint('FCM Token: $fcmToken');
     } catch (e) {
       debugPrint('FCM token error: $e');
+      _shouldRetryRegistration = true;
     }
+  }
+
+  void _registerTokenInBackground(String token) {
+    if (_tokenRegistrationInProgress) return;
+    
+    _tokenRegistrationInProgress = true;
+    _notificationRepo.registerFCMToken(token).then((_) {
+      _tokenRegistrationInProgress = false;
+      _shouldRetryRegistration = false;
+      debugPrint('FCM token registered successfully');
+    }).catchError((e) {
+      _tokenRegistrationInProgress = false;
+      _shouldRetryRegistration = true;
+      debugPrint('FCM token registration failed: $e');
+      // Retry after 5 seconds
+      Future.delayed(const Duration(seconds: 5), () {
+        if (_shouldRetryRegistration && fcmToken != null) {
+          _registerTokenInBackground(fcmToken!);
+        }
+      });
+    });
   }
 
   Future<void> _setupMessageHandlers() async {
@@ -218,6 +243,20 @@ class FCMService extends GetxService {
         settings.authorizationStatus == AuthorizationStatus.authorized;
     if (authorized) unawaited(initializeIfNeeded());
     return authorized;
+  }
+
+  /// Deferred permission request for post-navigation initialization
+  /// This runs completely in background without blocking UI
+  void requestPermissionDeferred() {
+    requestPermission().then((authorized) {
+      if (authorized) {
+        debugPrint('FCM permission granted (deferred)');
+      } else {
+        debugPrint('FCM permission denied (deferred)');
+      }
+    }).catchError((e) {
+      debugPrint('FCM permission error (deferred): $e');
+    });
   }
 }
 
