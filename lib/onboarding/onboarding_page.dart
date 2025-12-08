@@ -74,8 +74,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
     setState(() => _isLoading = true);
 
     try {
-      await completeOnboarding();
-      await AuthHandler.signInAnonymously();
+      await Future.wait([
+        completeOnboarding(),
+        AuthHandler.signInAnonymously(),
+      ]);
+      
       await FCMService.to.requestPermission();
       
       if (mounted) {

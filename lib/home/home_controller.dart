@@ -8,7 +8,8 @@ import 'package:odiya_news_app/services/fcm_service.dart';
 import 'package:odiya_news_app/services/hive_service.dart';
 
 class HomeController extends GetxController {
-  final hiveService = Get.find<HiveService>();
+  static HomeController get to => Get.find();
+  final HiveService hiveService = Get.find<HiveService>();
   final ArticlesRepository _repo = ArticlesRepository();
 
   List<NewsModel> articles = [];
@@ -199,6 +200,6 @@ class HomeController extends GetxController {
   bool get hasData => articles.isNotEmpty;
   bool get shouldShowLoading => articles.isEmpty && isLoading;
   bool get shouldShowError => articles.isEmpty && hasError;
-  int get unseenCount => hiveService.getUnseenArticlesCount();
+  int get unseenCount => hiveService.getUnseenArticles().length;
   bool get isNativeAdLoaded => nativeAd != null; // Added getter for ad status
 }

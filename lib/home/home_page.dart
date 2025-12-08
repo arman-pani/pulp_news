@@ -15,6 +15,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GetBuilder<HomeController>(
+        init: Get.isRegistered<HomeController>() ? null : HomeController(),
         builder: (ctrl) {
           return _buildContent(ctrl);
         },

@@ -4,9 +4,9 @@ import 'package:odiya_news_app/constants/app_theme.dart';
 import 'package:odiya_news_app/services/hive_service.dart';
 import 'package:odiya_news_app/services/fcm_service.dart';
 
-class SettingsController extends GetxService {
-  static SettingsController get to => Get.find();
-  final hiveService = Get.find<HiveService>();
+class SettingsService extends GetxService {
+  static SettingsService get to => Get.find();
+  final HiveService hiveService = Get.find<HiveService>();
   // Theme related observables
   final Rx<ThemeMode> _themeMode = ThemeMode.light.obs;
   ThemeMode get themeMode => _themeMode.value;

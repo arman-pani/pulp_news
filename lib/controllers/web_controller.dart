@@ -28,6 +28,13 @@ class WebController extends GetxController {
     _initializeWebView();
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    // Ensure the URL is loaded when the controller is ready
+    _loadUrl(initialUrl);
+  }
+
   void _initializeWebView() {
     webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -48,8 +55,16 @@ class WebController extends GetxController {
             errorMessage.value = 'Failed to load page: ${error.description}';
           },
         ),
-      )
-      ..loadRequest(Uri.parse(initialUrl));
+      );
+  }
+
+  void _loadUrl(String url) {
+    isLoading.value = true;
+    errorMessage.value = '';
+    currentUrl.value = url;
+    // Clear cache and load fresh URL
+    webViewController.clearCache();
+    webViewController.loadRequest(Uri.parse(url));
   }
 
   Future<void> _updatePageTitle() async {
@@ -66,6 +81,12 @@ class WebController extends GetxController {
   void reload() {
     errorMessage.value = '';
     webViewController.reload();
+  }
+
+  void loadNewUrl(String url, String title) {
+    currentUrl.value = url;
+    pageTitle.value = title;
+    _loadUrl(url);
   }
 
   void goBack() {

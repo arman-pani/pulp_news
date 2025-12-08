@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,45 +10,37 @@ import 'package:odiya_news_app/services/hive_service.dart';
 import 'package:odiya_news_app/services/auth_service.dart';
 import 'package:odiya_news_app/services/bookmark_service.dart';
 import 'package:odiya_news_app/services/fcm_service.dart';
-import 'package:odiya_news_app/controllers/settings_controller.dart';
-import 'package:odiya_news_app/home/home_controller.dart';
+import 'package:odiya_news_app/services/settings_service.dart';
 import 'package:odiya_news_app/constants/app_theme.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Mobile Ads
-  await MobileAds.instance.initialize();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Initialize GetXServices (kept in memory throughout app lifecycle)
+  await FirebaseAppCheck.instance.activate();
+
+  // Initialize only critical services that are needed immediately
   await Get.putAsync<HiveService>(() async => await HiveService().init());
-  Get.put(AuthService(), permanent: true);
+  Get.put(SettingsService(), permanent: true);
   await Get.putAsync<BookmarkService>(() async => BookmarkService(), permanent: true);
-  await Get.putAsync<FCMService>(() async => FCMService(), permanent: true);
-  Get.put(SettingsController(), permanent: true); // Initialize SettingsController after FCMService
-  await Get.putAsync<HomeController>(() async => HomeController(), permanent: true); // Initialize HomeController
-
-
-  // Initialize Firebase Auth and sign in anonymously
-  await _initializeAuth();
 
   await setupRouter();
-
-  // DioHandler.setup();
+  
+  // Initialize non-critical services in background after app loads
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _initializeBackgroundServices();
+  });
 
   runApp(const MyApp());
 }
 
-Future<void> _initializeAuth() async {
-  try {
-    // Sign in anonymously if no user is signed in
-    await AuthService.to.signInAnonymously();
-  } catch (e) {
-    debugPrint('Error signing in anonymously: $e');
-  }
+void _initializeBackgroundServices() {
+  // Initialize services in background without blocking UI
+  unawaited(MobileAds.instance.initialize());
+  unawaited(Get.putAsync<AuthService>(() async => AuthService(), permanent: true));
+  unawaited(Get.putAsync<FCMService>(() async => FCMService(), permanent: true));
 }
 
 class MyApp extends StatelessWidget {
@@ -62,10 +56,10 @@ class MyApp extends StatelessWidget {
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
 
-    return GetX<SettingsController>(
-      builder: (settingsController) {
+    return GetX<SettingsService>(
+      builder: (settingsService) {
         // Access the observable variable to ensure GetX tracks it
-        final themeMode = settingsController.themeModeObs.value;
+        final themeMode = settingsService.themeMode;
 
         return MaterialApp.router(
           title: 'Pulp News',

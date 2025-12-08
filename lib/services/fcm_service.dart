@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -11,24 +12,23 @@ import 'package:odiya_news_app/utils/app_router.dart';
 
 class FCMService extends GetxService {
   static FCMService get to => Get.find();
-  
+
   final _messaging = FirebaseMessaging.instance;
   final _localNotifications = FlutterLocalNotificationsPlugin();
   final _notificationRepo = NotificationRepository.instance;
-  late final HiveService hiveService;
+  final HiveService hiveService = Get.find<HiveService>();
 
   String? fcmToken;
-  @override
-  void onInit() {
-    super.onInit();
-    hiveService = Get.find<HiveService>();
-    _initialize();
-  }
+  bool _initialized = false;
 
-  Future<void> _initialize() async {
-    await _setupLocalNotifications();
-    await _getToken();
-    _setupMessageHandlers();
+  Future<void> initializeIfNeeded() async {
+    if (_initialized) return;
+    _initialized = true;
+
+    // Run setup tasks in parallel without blocking UI
+    unawaited(_setupLocalNotifications());
+    unawaited(_getToken());
+    unawaited(_setupMessageHandlers());
   }
 
   Future<void> _setupLocalNotifications() async {
@@ -48,19 +48,24 @@ class FCMService extends GetxService {
   }
 
   Future<void> _getToken() async {
-    fcmToken = await _messaging.getToken();
-    if (fcmToken != null) await hiveService.storeFCMToken(fcmToken!);
-    debugPrint('FCM Token: $fcmToken');
+    try {
+      fcmToken = await _messaging.getToken();
+      if (fcmToken != null) {
+        hiveService.storeFCMToken(fcmToken!);
+        _notificationRepo.registerFCMToken(fcmToken!);
+      }
+      debugPrint('FCM Token: $fcmToken');
+    } catch (e) {
+      debugPrint('FCM token error: $e');
+    }
   }
 
-  void _setupMessageHandlers() {
+  Future<void> _setupMessageHandlers() async {
     FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
     FirebaseMessaging.onMessage.listen(_foregroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_notificationTap);
     _handleInitialMessage();
   }
-
- 
 
   // Message Handlers
   Future<void> _foregroundMessage(RemoteMessage message) async {
@@ -89,7 +94,7 @@ class FCMService extends GetxService {
 
     try {
       final article = NewsModel.fromMap(data);
-      
+
       if (Get.isRegistered<HomeController>()) {
         await _addToHomeController(article);
       } else {
@@ -104,9 +109,11 @@ class FCMService extends GetxService {
 
   Future<void> _addToHomeController(NewsModel article) async {
     final homeCtrl = Get.find<HomeController>();
-    
-    final existingIndex = homeCtrl.articles.indexWhere((a) => a.id == article.id);
-    
+
+    final existingIndex = homeCtrl.articles.indexWhere(
+      (a) => a.id == article.id,
+    );
+
     if (existingIndex == -1) {
       homeCtrl.displayList.insert(0, article);
       await hiveService.saveArticles([article]);
@@ -119,6 +126,56 @@ class FCMService extends GetxService {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+  }
+
+  Future<bool> toggleNotifications(bool enabled) async {
+    try {
+      // Update local storage first
+      await hiveService.setNotificationEnabled(enabled);
+
+      if (enabled) {
+        // Request permission if enabling
+        final settings = await _messaging.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+        if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+          // Permission denied, revert setting
+          await hiveService.setNotificationEnabled(false);
+          return false;
+        }
+
+        // Initialize FCM if not already done
+        await initializeIfNeeded();
+
+        // Register with server
+        if (fcmToken != null) {
+          debugPrint('##Registering FCM Token: $fcmToken');
+          await _notificationRepo.registerFCMToken(fcmToken!);
+          await _notificationRepo.updateNotificationSettings(
+            enabled: true,
+            fcmToken: fcmToken!,
+          );
+        }
+      } else {
+        // Disable notifications
+        if (fcmToken != null) {
+          await _notificationRepo.updateNotificationSettings(
+            enabled: false,
+            fcmToken: fcmToken!,
+          );
+        }
+      }
+
+      return true;
+    } catch (e) {
+      debugPrint('Error toggling notifications: $e');
+      // Revert on error
+      await hiveService.setNotificationEnabled(!enabled);
+      return false;
+    }
   }
 
   // Local Notifications
@@ -150,48 +207,16 @@ class FCMService extends GetxService {
     );
   }
 
-  // Public Methods
-  Future<bool> toggleNotifications(bool enabled) async {
-    try {
-      await hiveService.setNotificationEnabled(enabled);
-
-      if (enabled) {
-        final settings = await _messaging.requestPermission(
-          alert: true, badge: true, sound: true,
-        );
-
-        if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-          await hiveService.setNotificationEnabled(false);
-          return false;
-        }
-
-        if (fcmToken != null) {
-          await _notificationRepo.registerFCMToken(fcmToken!);
-        }
-      }
-
-      if (fcmToken != null) {
-        await _notificationRepo.updateNotificationSettings(
-          enabled: enabled, 
-          fcmToken: fcmToken!,
-        );
-      }
-
-      return true;
-    } catch (e) {
-      debugPrint('Error toggling notifications: $e');
-      return false;
-    }
-  }
-
   Future<bool> requestPermission() async {
     final settings = await _messaging.requestPermission(
-      alert: true, badge: true, sound: true,
+      alert: true,
+      badge: true,
+      sound: true,
     );
-    
-    final authorized = settings.authorizationStatus == AuthorizationStatus.authorized;
-    await toggleNotifications(authorized);
-    
+
+    final authorized =
+        settings.authorizationStatus == AuthorizationStatus.authorized;
+    if (authorized) unawaited(initializeIfNeeded());
     return authorized;
   }
 }
@@ -199,9 +224,9 @@ class FCMService extends GetxService {
 // Background Handler
 @pragma('vm:entry-point')
 Future<void> _backgroundHandler(RemoteMessage message) async {
-  final hiveService = Get.find<HiveService>();
+  final HiveService hiveService = Get.find<HiveService>();
   final data = message.data;
-  
+
   if (data['type'] == 'new_article') {
     try {
       final article = NewsModel.fromMap(data);

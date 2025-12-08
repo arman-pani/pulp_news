@@ -4,19 +4,43 @@ import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:odiya_news_app/controllers/web_controller.dart';
 
-class WebViewPage extends StatelessWidget {
+class WebViewPage extends StatefulWidget {
   final String url;
   final String title;
 
   const WebViewPage({super.key, required this.url, required this.title});
 
   @override
+  State<WebViewPage> createState() => _WebViewPageState();
+}
+
+class _WebViewPageState extends State<WebViewPage> {
+  late WebController webController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Create or get existing controller and load the new URL
+    if (Get.isRegistered<WebController>()) {
+      webController = Get.find<WebController>();
+      webController.loadNewUrl(widget.url, widget.title);
+    } else {
+      webController = Get.put(WebController(
+        initialUrl: widget.url,
+        initialTitle: widget.title,
+      ));
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose the controller when the page is closed
+    Get.delete<WebController>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Initialize the controller with the provided URL and title
-    final webController = Get.put(WebController(
-      initialUrl: url,
-      initialTitle: title,
-    ));
 
     return Scaffold(
       appBar: AppBar(

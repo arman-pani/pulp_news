@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:odiya_news_app/constants/app_strings.dart';
-import 'package:odiya_news_app/controllers/settings_controller.dart';
+import 'package:odiya_news_app/services/settings_service.dart';
 import 'package:odiya_news_app/profile/widgets/settings_tile.dart';
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
 
-  final SettingsController settingsController = Get.find();
+  final SettingsService settingsService = SettingsService.to;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
         child: Column(
           children: [
-            _buildLanguageSelector(context, settingsController),
+            _buildLanguageSelector(context, settingsService),
             const Divider(),
-            _buildThemeToggle(context, settingsController),
+            _buildThemeToggle(context, settingsService),  
             const Divider(),
-            _buildNotificationToggle(context, settingsController),
+            _buildNotificationToggle(context, settingsService),
           ],
         ),
       ),
@@ -36,18 +36,18 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildThemeToggle(
     BuildContext context,
-    SettingsController settingsController,
+    SettingsService settingsService,
   ) {
     return Obx(() {
-      final isDark = settingsController.brightnessObs.value == Brightness.dark;
-      
+      final isDark = settingsService.isDarkMode;
+
       return SettingsTile(
         leadingIcon: isDark ? Icons.dark_mode : Icons.light_mode,
         title: AppStrings.themeSettings,
         subtitle: isDark ? AppStrings.darkTheme : AppStrings.lightTheme,
         trailing: Switch(
           value: isDark,
-          onChanged: (value) => settingsController.toggleTheme(),
+          onChanged: (value) => settingsService.toggleTheme(),
           activeColor: Theme.of(context).colorScheme.primary,
         ),
       );
@@ -56,28 +56,28 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildLanguageSelector(
     BuildContext context,
-    SettingsController settingsController,
+    SettingsService settingsService,
   ) {
     return Obx(() => SettingsTile(
       leadingIcon: Icons.language,
       title: AppStrings.selectLanguage,
-      subtitle: settingsController.languageDisplayName,
-      onTap: () => _showLanguageDialog(context, settingsController),
+      subtitle: settingsService.languageDisplayName,
+      onTap: () => _showLanguageDialog(context, settingsService),
     ));
   }
 
   Widget _buildNotificationToggle(
     BuildContext context,
-    SettingsController settingsController,
+    SettingsService settingsService,
   ) {
     return Obx(
       () => SettingsTile(
-        leadingIcon: settingsController.notificationIcon,
+        leadingIcon: settingsService.notificationsEnabled ? Icons.notifications : Icons.notifications_off,
         title: AppStrings.notificationSettings,
-        subtitle: settingsController.notificationStatus,
+        subtitle: AppStrings.notificationSettings,
         trailing: Switch(
-          value: settingsController.notificationsEnabled,
-          onChanged: (value) => settingsController.toggleNotifications(value, context),
+          value: settingsService.notificationsEnabled,
+          onChanged: (value) => settingsService.toggleNotifications(value, context),
           activeColor: Theme.of(context).colorScheme.primary,
         ),
       ),
@@ -86,7 +86,7 @@ class SettingsPage extends StatelessWidget {
 
   void _showLanguageDialog(
     BuildContext context,
-    SettingsController settingsController,
+    SettingsService settingsService,
   ) {
     showDialog(
       context: context,
@@ -106,11 +106,11 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               value: 'en',
-              groupValue: settingsController.selectedLanguage,
+              groupValue: settingsService.selectedLanguage,
               activeColor: Theme.of(context).colorScheme.primary,
               onChanged: (value) {
                 if (value != null) {
-                  settingsController.changeLanguage(value);
+                  settingsService.changeLanguage(value);
                   Navigator.of(context).pop();
                 }
               },
@@ -123,7 +123,7 @@ class SettingsPage extends StatelessWidget {
             //     ),
             //   ),
             //   value: 'odia',
-            //   groupValue: settingsController.selectedLanguage,
+            //   groupValue: settingsService.selectedLanguage,
             //   activeColor: Theme.of(context).colorScheme.primary,
             //   onChanged: (value) {
             //     if (value != null) {

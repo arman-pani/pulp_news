@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odiya_news_app/constants/app_images.dart';
 
 class IndexPage extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -42,8 +43,7 @@ class _IndexPageState extends State<IndexPage> {
           BottomNavigationBarItem(
             
             icon:   SvgPicture.asset(
-
-              'assets/icons/explore_logo.svg',
+              AppImages.exploreNavButton,
               width: 32,
               height: 32,
               colorFilter: ColorFilter.mode(

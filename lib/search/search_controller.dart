@@ -5,7 +5,7 @@ import 'package:odiya_news_app/repository/articles_repository.dart';
 import 'package:odiya_news_app/services/hive_service.dart';
 
 class NewsSearchController extends GetxController {
-  final hiveService = Get.find<HiveService>();
+  final HiveService hiveService = Get.find<HiveService>();
   final ArticlesRepository _articlesRepository = ArticlesRepository();
 
   // Search functionality
