@@ -25,10 +25,14 @@ class AuthService extends GetxService {
   
   Future<void> signInAnonymously() async {
     try {
-      if (_auth.currentUser == null) {
-        await _auth.signInAnonymously();
-        debugPrint('Signed in anonymously: ${_auth.currentUser?.uid}');
+      // Quick check: if already authenticated, skip network call
+      if (_auth.currentUser != null) {
+        debugPrint('Already signed in: ${_auth.currentUser?.uid}');
+        return;
       }
+      
+      await _auth.signInAnonymously();
+      debugPrint('Signed in anonymously: ${_auth.currentUser?.uid}');
     } catch (e) {
       debugPrint('Error signing in anonymously: $e');
       rethrow;

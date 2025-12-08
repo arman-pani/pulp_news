@@ -7,6 +7,7 @@ import 'package:odiya_news_app/services/fcm_service.dart';
 import 'package:odiya_news_app/utils/app_handler.dart';
 import 'package:odiya_news_app/utils/app_router.dart';
 import 'package:odiya_news_app/utils/auth_handler.dart';
+import 'package:odiya_news_app/utils/fcm_init_handler.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -74,15 +75,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
     setState(() => _isLoading = true);
 
     try {
+      // Only wait for critical operations
       await Future.wait([
         completeOnboarding(),
         AuthHandler.signInAnonymously(),
       ]);
       
-      await FCMService.to.requestPermission();
-      
+      // Navigate immediately without waiting for FCM
       if (mounted) {
         context.pushReplacementNamed(AppRoutes.explore);
+        
+        // Initialize FCM in background after navigation
+        FCMInitHandler.initializeDeferredFCM();
       }
     } catch (e) {
       debugPrint('Error completing onboarding: $e');
