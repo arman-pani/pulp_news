@@ -18,16 +18,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   await FirebaseAppCheck.instance.activate();
 
   // Initialize only critical services that are needed immediately
   await Get.putAsync<HiveService>(() async => await HiveService().init());
   Get.put(SettingsService(), permanent: true);
-  await Get.putAsync<BookmarkService>(() async => BookmarkService(), permanent: true);
+  await Get.putAsync<BookmarkService>(
+    () async => BookmarkService(),
+    permanent: true,
+  );
 
   await setupRouter();
-  
+
   // Initialize non-critical services in background after app loads
   WidgetsBinding.instance.addPostFrameCallback((_) {
     _initializeBackgroundServices();
@@ -39,22 +41,26 @@ void main() async {
 void _initializeBackgroundServices() {
   // Initialize services in background without blocking UI
   unawaited(MobileAds.instance.initialize());
-  unawaited(Get.putAsync<AuthService>(() async => AuthService(), permanent: true));
-  unawaited(Get.putAsync<FCMService>(() async => FCMService(), permanent: true));
+  unawaited(
+    Get.putAsync<AuthService>(() async => AuthService(), permanent: true),
+  );
+  unawaited(
+    Get.putAsync<FCMService>(() async => FCMService(), permanent: true),
+  );
 }
 
 class MyApp extends StatelessWidget {
-
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
 
     return GetX<SettingsService>(
       builder: (settingsService) {

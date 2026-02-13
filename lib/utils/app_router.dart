@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/onboarding/country_page.dart';
+import 'package:odiya_news_app/pages/editorial_page.dart';
 import 'package:odiya_news_app/profile/pages/bookmark_page.dart';
 import 'package:odiya_news_app/home/home_page.dart';
 import 'package:odiya_news_app/index.dart';
@@ -15,11 +16,14 @@ import 'package:odiya_news_app/pages/web_view_page.dart';
 import 'package:odiya_news_app/profile/pages/settings_page.dart';
 import 'package:odiya_news_app/utils/app_handler.dart';
 import 'package:odiya_news_app/utils/helper_methods.dart';
+import 'package:odiya_news_app/video_feed/video_feed_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _homeNavigatorKey = GlobalKey<NavigatorState>();
+final _editorialNavigatorKey = GlobalKey<NavigatorState>();
 final _profileNavigatorKey = GlobalKey<NavigatorState>();
 final _exploreNavigatorKey = GlobalKey<NavigatorState>();
+final _videoFeedNavigatorKey = GlobalKey<NavigatorState>();
 
 late final GoRouter goRouter;
 
@@ -102,6 +106,18 @@ Future<void> setupRouter() async {
               ),
             ],
           ),
+
+          StatefulShellBranch(
+            navigatorKey: _editorialNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/editorial',
+                name: AppRoutes.editorial,
+                pageBuilder: (context, state) =>
+                    NoTransitionPage(child: EditorialPage()),
+              ),
+            ],
+          ),
           StatefulShellBranch(
             navigatorKey: _exploreNavigatorKey,
             routes: [
@@ -110,6 +126,17 @@ Future<void> setupRouter() async {
                 name: AppRoutes.explore,
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: HomePage()),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _videoFeedNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/video-feed',
+                name: AppRoutes.videoFeed,
+                pageBuilder: (context, state) =>
+                    NoTransitionPage(child: VideoFeedScreen()),
               ),
             ],
           ),
@@ -137,7 +164,6 @@ Future<void> setupRouter() async {
                     pageBuilder: (context, state) =>
                         NoTransitionPage(child: SettingsPage()),
                   ),
-
                 ],
               ),
             ],
@@ -158,6 +184,7 @@ Future<void> setupRouter() async {
 class AppRoutes {
   static const String onboarding = 'onboarding';
   static const String home = 'home';
+  static const String editorial = 'editorial';
   static const String indiaMap = 'indiaMap';
   static const String bookmark = 'bookmark';
   static const String profile = 'profile';
@@ -167,4 +194,5 @@ class AppRoutes {
   static const String category = 'category';
   static const String articleDetail = 'articleDetail';
   static const String webView = 'webView';
+  static const String videoFeed = 'videoFeed';
 }

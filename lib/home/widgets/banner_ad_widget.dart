@@ -15,9 +15,9 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   bool _isLoaded = false;
 
   // Test Ad Unit ID - Replace with your actual Ad Unit ID
-    final _adUnitId = Platform.isAndroid
-    ? 'ca-app-pub-3940256099942544/6300978111'
-    : 'ca-app-pub-3940256099942544/2934735716';
+  final _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-7198668592905321/9701544472'
+      : 'ca-app-pub-3940256099942544/2934735716';
 
   @override
   void initState() {

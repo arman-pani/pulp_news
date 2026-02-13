@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:odiya_news_app/constants/app_images.dart';
 
 class IndexPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -37,24 +38,30 @@ class _IndexPageState extends State<IndexPage> {
         unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
         showUnselectedLabels: false,
         showSelectedLabels: false,
-        iconSize: 32,
+        iconSize: 24,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: ''),
+          BottomNavigationBarItem(icon: Icon(LucideIcons.house), label: ''),
+          BottomNavigationBarItem(icon: Icon(LucideIcons.newspaper), label: ''),
           BottomNavigationBarItem(
-            
-            icon:   SvgPicture.asset(
+            icon: SvgPicture.asset(
               AppImages.exploreNavButton,
-              width: 32,
-              height: 32,
+              width: 24,
+              height: 24,
               colorFilter: ColorFilter.mode(
-                _selectedIndex == 1 ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                _selectedIndex == 2
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 BlendMode.srcIn,
               ),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_rounded),
+            icon: Icon(LucideIcons.squarePlay),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(LucideIcons.circleUser),
             label: '',
           ),
         ],

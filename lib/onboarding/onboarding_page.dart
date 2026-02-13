@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/constants/app_strings.dart';
 import 'package:odiya_news_app/onboarding/widgets/feature_column.dart';
 import 'package:odiya_news_app/onboarding/widgets/page_indicator.dart';
-import 'package:odiya_news_app/services/fcm_service.dart';
 import 'package:odiya_news_app/utils/app_handler.dart';
 import 'package:odiya_news_app/utils/app_router.dart';
 import 'package:odiya_news_app/utils/auth_handler.dart';
@@ -71,7 +70,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Future<void> _completeOnboarding() async {
     if (_isLoading) return;
-    
+
     setState(() => _isLoading = true);
 
     try {
@@ -80,11 +79,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
         completeOnboarding(),
         AuthHandler.signInAnonymously(),
       ]);
-      
+
       // Navigate immediately without waiting for FCM
       if (mounted) {
         context.pushReplacementNamed(AppRoutes.explore);
-        
+
         // Initialize FCM in background after navigation
         FCMInitHandler.initializeDeferredFCM();
       }
@@ -102,10 +101,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       SnackBar(
         content: const Text('Failed to complete setup. Please try again.'),
         backgroundColor: Theme.of(context).colorScheme.error,
-        action: SnackBarAction(
-          label: 'Retry',
-          onPressed: _completeOnboarding,
-        ),
+        action: SnackBarAction(label: 'Retry', onPressed: _completeOnboarding),
       ),
     );
   }
@@ -113,11 +109,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoading ? const Center(child: CircularProgressIndicator()) : _buildOnboardingView(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _buildOnboardingView(),
     );
   }
-
-  
 
   Widget _buildOnboardingView() {
     return SafeArea(
@@ -125,7 +121,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
         children: [
           _buildSkipButton(),
           _buildPageView(),
-          PageIndicator(length: _onboardingData.length, currentPage: _currentPage),
+          PageIndicator(
+            length: _onboardingData.length,
+            currentPage: _currentPage,
+          ),
           _buildNavigationButtons(),
         ],
       ),
@@ -159,28 +158,25 @@ class _OnboardingPageState extends State<OnboardingPage> {
         controller: _pageController,
         onPageChanged: (index) => setState(() => _currentPage = index),
         itemCount: _onboardingData.length,
-        itemBuilder: (context, index) => FeatureColumn(data: _onboardingData[index]),
+        itemBuilder: (context, index) =>
+            FeatureColumn(data: _onboardingData[index]),
       ),
     );
   }
-
 
   Widget _buildNavigationButtons() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildBackButton(),
-          _buildNextButton(),
-        ],
+        children: [_buildBackButton(), _buildNextButton()],
       ),
     );
   }
 
   Widget _buildBackButton() {
     if (_currentPage == 0) return const SizedBox(width: 80);
-    
+
     return TextButton.icon(
       onPressed: _previousPage,
       icon: const Icon(Icons.arrow_back_ios, size: 16),
@@ -190,7 +186,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildNextButton() {
     final isLastPage = _currentPage == _onboardingData.length - 1;
-    
+
     return ElevatedButton.icon(
       onPressed: _nextPage,
       icon: Icon(isLastPage ? Icons.check : Icons.arrow_forward_ios, size: 16),
@@ -199,7 +195,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       ),
     );
-  } 
+  }
 }
 
 class OnboardingData {
