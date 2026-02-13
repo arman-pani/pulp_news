@@ -12,15 +12,9 @@ Pulp News is a cross-platform mobile application built with Flutter that deliver
 
 This repository contains the Flutter front-end and backend glue (Firebase, Cloud Functions, and Cloud SQL) used to power realtime updates, authentication, notifications, and summarization orchestration.
 
-Closed testing badge:
-
-![Closed Testing](images/pulp_news_closed_testing.png)
-
 Demo video (short walk-through):
 
 [![Demo video](images/home_page.jpeg)](https://youtube.com/shorts/7MPF2LOIfCk)
-
-> Release status: Pulp News is currently in closed testing. The app is scheduled for production release in a few days — monitoring feedback and stability before rolling out publicly.
 
 ## Key Features
 
