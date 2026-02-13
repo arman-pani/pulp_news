@@ -48,12 +48,6 @@ Demo video (short walk-through):
 	flutter run
 
 
-## Screenshots & Demo
-
-Below are screenshots of the app pages (Home, Explore, Category) and a short demo video showing the app in action.
-
-
-
 
 
 
