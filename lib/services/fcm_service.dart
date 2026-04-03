@@ -9,6 +9,9 @@ import 'package:odiya_news_app/repository/notification_repository.dart';
 import 'package:odiya_news_app/services/hive_service.dart';
 import 'package:odiya_news_app/home/home_controller.dart';
 import 'package:odiya_news_app/utils/app_router.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:odiya_news_app/firebase_options.dart';
 
 class FCMService extends GetxService {
   static FCMService get to => Get.find();
@@ -66,23 +69,26 @@ class FCMService extends GetxService {
 
   void _registerTokenInBackground(String token) {
     if (_tokenRegistrationInProgress) return;
-    
+
     _tokenRegistrationInProgress = true;
-    _notificationRepo.registerFCMToken(token).then((_) {
-      _tokenRegistrationInProgress = false;
-      _shouldRetryRegistration = false;
-      debugPrint('FCM token registered successfully');
-    }).catchError((e) {
-      _tokenRegistrationInProgress = false;
-      _shouldRetryRegistration = true;
-      debugPrint('FCM token registration failed: $e');
-      // Retry after 5 seconds
-      Future.delayed(const Duration(seconds: 5), () {
-        if (_shouldRetryRegistration && fcmToken != null) {
-          _registerTokenInBackground(fcmToken!);
-        }
-      });
-    });
+    _notificationRepo
+        .registerFCMToken(token)
+        .then((_) {
+          _tokenRegistrationInProgress = false;
+          _shouldRetryRegistration = false;
+          debugPrint('FCM token registered successfully');
+        })
+        .catchError((e) {
+          _tokenRegistrationInProgress = false;
+          _shouldRetryRegistration = true;
+          debugPrint('FCM token registration failed: $e');
+          // Retry after 5 seconds
+          Future.delayed(const Duration(seconds: 5), () {
+            if (_shouldRetryRegistration && fcmToken != null) {
+              _registerTokenInBackground(fcmToken!);
+            }
+          });
+        });
   }
 
   Future<void> _setupMessageHandlers() async {
@@ -248,30 +254,62 @@ class FCMService extends GetxService {
   /// Deferred permission request for post-navigation initialization
   /// This runs completely in background without blocking UI
   void requestPermissionDeferred() {
-    requestPermission().then((authorized) {
-      if (authorized) {
-        debugPrint('FCM permission granted (deferred)');
-      } else {
-        debugPrint('FCM permission denied (deferred)');
-      }
-    }).catchError((e) {
-      debugPrint('FCM permission error (deferred): $e');
-    });
+    requestPermission()
+        .then((authorized) {
+          if (authorized) {
+            debugPrint('FCM permission granted (deferred)');
+          } else {
+            debugPrint('FCM permission denied (deferred)');
+          }
+        })
+        .catchError((e) {
+          debugPrint('FCM permission error (deferred): $e');
+        });
   }
 }
 
-// Background Handler
 @pragma('vm:entry-point')
 Future<void> _backgroundHandler(RemoteMessage message) async {
-  final HiveService hiveService = Get.find<HiveService>();
-  final data = message.data;
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  if (data['type'] == 'new_article') {
-    try {
-      final article = NewsModel.fromMap(data);
-      await hiveService.storePendingNotificationArticle(article);
-    } catch (e) {
-      debugPrint('Background error: $e');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    await Hive.initFlutter();
+
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(NewsModelAdapter());
     }
+
+    final settingsBox = await Hive.openBox<String>('settings');
+    final data = message.data;
+
+    if (data['type'] == 'new_article') {
+      final article = NewsModel.fromMap(data);
+
+      final existingJson =
+          settingsBox.get(
+            'pending_notification_articles',
+            defaultValue: '[]',
+          ) ??
+          '[]';
+
+      final List<dynamic> pendingArticles = json.decode(existingJson);
+      pendingArticles.add(article.toMap());
+
+      if (pendingArticles.length > 10) {
+        pendingArticles.removeRange(0, pendingArticles.length - 10);
+      }
+
+      await settingsBox.put(
+        'pending_notification_articles',
+        json.encode(pendingArticles),
+      );
+    }
+  } catch (e, st) {
+    debugPrint('Background error: $e');
+    debugPrintStack(stackTrace: st);
   }
 }

@@ -41,13 +41,14 @@ class _IndexPageState extends State<IndexPage> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: ''),
           BottomNavigationBarItem(
-            
-            icon:   SvgPicture.asset(
+            icon: SvgPicture.asset(
               AppImages.exploreNavButton,
               width: 32,
               height: 32,
               colorFilter: ColorFilter.mode(
-                _selectedIndex == 1 ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+                _selectedIndex == 1
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 BlendMode.srcIn,
               ),
             ),

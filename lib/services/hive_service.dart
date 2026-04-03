@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:odiya_news_app/models/news_model.dart';
 
-class HiveService {
+class HiveService extends GetxService {
+  static HiveService get to => Get.find();
   static const String _articlesBox = 'articles';
   static const String _bookmarksBox = 'bookmarks';
   static const String _recentSearchesBox = 'recent_searches';
@@ -20,7 +22,10 @@ class HiveService {
 
   Future<HiveService> init() async {
     await Hive.initFlutter();
-    Hive.registerAdapter(NewsModelAdapter());
+
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(NewsModelAdapter());
+    }
 
     _articlesBoxInstance = await Hive.openBox<NewsModel>(_articlesBox);
     _bookmarksBoxInstance = await Hive.openBox<NewsModel>(_bookmarksBox);
@@ -174,7 +179,8 @@ class HiveService {
     return _settingsBoxInstance.get('language', defaultValue: 'en') ?? 'en';
   }
 
-  // FCM Token methods
+  // ── FCM Token methods ─────────────────────────────────────────────────────
+
   Future<void> storeFCMToken(String token) async {
     await _settingsBoxInstance.put(_fcmTokenKey, token);
   }

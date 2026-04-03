@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/constants/app_strings.dart';
 import 'package:odiya_news_app/onboarding/widgets/feature_column.dart';
 import 'package:odiya_news_app/onboarding/widgets/page_indicator.dart';
-import 'package:odiya_news_app/services/fcm_service.dart';
 import 'package:odiya_news_app/utils/app_handler.dart';
 import 'package:odiya_news_app/utils/app_router.dart';
 import 'package:odiya_news_app/utils/auth_handler.dart';
@@ -78,7 +77,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
       // Only wait for critical operations
       await Future.wait([
         completeOnboarding(),
-        AuthHandler.signInAnonymously(),
+        AuthHandler.ensureSession(), // no-op if session already exists from main()
       ]);
       
       // Navigate immediately without waiting for FCM

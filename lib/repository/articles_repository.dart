@@ -1,99 +1,93 @@
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:odiya_news_app/models/news_model.dart';
-import 'package:odiya_news_app/services/firebase_functions_service.dart';
+import 'package:odiya_news_app/services/api_client.dart';
 
 class ArticlesRepository {
-  final FirebaseFunctions _functions;
+  final Dio _dio = ApiClient.instance.dio;
 
-  ArticlesRepository()
-      : _functions = FirebaseFunctionsService.instance.functions {
-    // _functions.useFunctionsEmulator("192.168.29.107", 5001);
-    
-  }
-
-  /// Fetch unseen articles
+  /// Fetch articles not yet seen by the authenticated user.
+  /// The server marks them as seen on response.
   Future<List<NewsModel>> getUnseenArticles({int limit = 20}) async {
     try {
-      final callable = _functions.httpsCallable('get_unseen_articles_endpoint');
-      final result = await callable.call({
-        'limit': limit,
-      });
+      final response = await _dio.get(
+        '/articles/unseen',
+        queryParameters: {'limit': limit},
+      );
 
-      // Handle the response structure: { articles: [...], total: ..., limit: ..., success: ... }
-      final responseData = result.data;
-      final articlesData = responseData['articles'];
-
-      return (articlesData as List)
-        .map((e) => NewsModel.fromMap(e))
-        .toList();
+      final articlesData =
+          (response.data as Map<String, dynamic>)['articles'] as List;
+      return articlesData.map((e) => NewsModel.fromMap(e)).toList();
     } catch (e) {
-      debugPrint('Error fetching unseen articles: $e');
-      rethrow; // Rethrow the error so the controller can handle it
-    }
-  }
-
-  /// Search articles by query string
-  Future<List<NewsModel>> searchArticles(String query) async {
-    try {
-      final callable = _functions.httpsCallable('search_articles_endpoint');
-      final result = await callable.call({
-        'q': query,
-      });
-
-      // Handle the response structure: { articles: [...], total: ..., limit: ..., success: ... }
-      final responseData = result.data;
-      final articlesData = responseData['articles'];
-
-      return (articlesData as List)
-        .map((e) => NewsModel.fromMap(e))
-        .toList();
-    } catch (e) {
-      debugPrint('Error searching articles: $e');
+      debugPrint('[ArticlesRepository] getUnseenArticles error: $e');
       rethrow;
     }
   }
 
-  /// Fetch articles by category with pagination support
+  /// Full-text fuzzy search across article titles and content.
+  Future<List<NewsModel>> searchArticles(
+    String query, {
+    int limit = 20,
+    int offset = 0,
+    String? category,
+  }) async {
+    try {
+      final response = await _dio.get(
+        '/articles/search',
+        queryParameters: {
+          'q': query,
+          'limit': limit,
+          'offset': offset,
+          if (category != null) 'category': category,
+        },
+      );
+
+      final articlesData =
+          (response.data as Map<String, dynamic>)['articles'] as List;
+      return articlesData.map((e) => NewsModel.fromMap(e)).toList();
+    } catch (e) {
+      debugPrint('[ArticlesRepository] searchArticles error: $e');
+      rethrow;
+    }
+  }
+
+  /// Fetch articles by category with pagination support.
   Future<List<NewsModel>> getArticlesByCategory(
     String category, {
     int offset = 0,
     int limit = 20,
   }) async {
     try {
-      final callable = _functions.httpsCallable('get_articles_by_category_endpoint');
-      debugPrint('Getting articles by category: $category');
-      final result = await callable.call({
-        'category': category,
-        'offset': offset,
-        'limit': limit,
-      });
+      final response = await _dio.get(
+        '/articles/by-category',
+        queryParameters: {
+          'category': category,
+          'limit': limit,
+          'offset': offset,
+        },
+      );
 
-      // Handle the response structure: { articles: [...], total: ..., limit: ..., success: ... }
-      final responseData = result.data;
-      final articlesData = responseData['articles'];
-
-      return (articlesData as List)
-        .map((e) => NewsModel.fromMap(e))
-        .toList();
+      final articlesData =
+          (response.data as Map<String, dynamic>)['articles'] as List;
+      return articlesData.map((e) => NewsModel.fromMap(e)).toList();
     } catch (e) {
-      debugPrint('Error fetching articles by category: $e');
+      debugPrint('[ArticlesRepository] getArticlesByCategory error: $e');
       rethrow;
     }
   }
 
-  /// Get bundled articles from all categories
+  /// Get the latest articles grouped by every permanent category.
   Future<Map<String, dynamic>> getBundledArticles({
     int limitPerCategory = 5,
   }) async {
     try {
-      final callable = _functions.httpsCallable('get_bundled_articles_endpoint');
-      final result = await callable.call({
-        'limit_per_category': limitPerCategory,
-      });
-      return result.data;
+      final response = await _dio.get(
+        '/articles/bundled',
+        queryParameters: {'limit_per_category': limitPerCategory},
+      );
+      return response.data as Map<String, dynamic>;
     } catch (e) {
-      debugPrint('Error fetching bundled articles: $e');
+      debugPrint('[ArticlesRepository] getBundledArticles error: $e');
       rethrow;
     }
   }

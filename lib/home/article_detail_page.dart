@@ -9,6 +9,11 @@ class ArticleDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: NewsHomePage(article: article, isBack: true));
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 40.0),
+        child: NewsHomePage(article: article, isBack: true),
+      ),
+    );
   }
 }

@@ -8,12 +8,16 @@ import 'package:odiya_news_app/widgets/news_list_tile.dart';
 class CategoryNewsTabView extends StatelessWidget {
   final List<NewsModel> newsList;
   final String categoryName;
-  const CategoryNewsTabView({super.key, required this.newsList, required this.categoryName});
+  const CategoryNewsTabView({
+    super.key,
+    required this.newsList,
+    required this.categoryName,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: newsList.length,
@@ -24,7 +28,8 @@ class CategoryNewsTabView extends StatelessWidget {
           spacing: 16.0,
           children: [
             NewsListTile(news: news),
-            if (index == newsList.length - 1) _buildShowMoreButton(context, news),
+            if (index == newsList.length - 1)
+              _buildShowMoreButton(context, news),
           ],
         );
       },
