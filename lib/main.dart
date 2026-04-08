@@ -1,18 +1,20 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:odiya_news_app/utils/app_router.dart';
-import 'package:odiya_news_app/services/hive_service.dart';
-import 'package:odiya_news_app/services/token_storage.dart';
-import 'package:odiya_news_app/services/auth_service.dart';
-import 'package:odiya_news_app/services/bookmark_service.dart';
-import 'package:odiya_news_app/services/fcm_service.dart';
-import 'package:odiya_news_app/services/settings_service.dart';
-import 'package:odiya_news_app/constants/app_theme.dart';
+import 'package:odiya_news_app/core/local/settings_local_service.dart';
+import 'package:odiya_news_app/core/local/hive_service.dart';
+import 'package:odiya_news_app/core/local/token_storage.dart';
+import 'package:odiya_news_app/core/constants/app_theme.dart';
+import 'package:odiya_news_app/core/providers/app_container.dart';
+import 'package:odiya_news_app/core/providers/app_providers.dart';
+import 'package:odiya_news_app/core/routing/app_router.dart';
+import 'package:odiya_news_app/core/services/app_snackbar_service.dart';
+import 'package:odiya_news_app/core/utils/helper_methods.dart';
+import 'package:odiya_news_app/features/settings/controllers/settings_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -24,33 +26,24 @@ void main() async {
   // Firebase is still required for FCM and Remote Config
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Initialize critical services synchronously before the first frame
-  await Get.putAsync<HiveService>(
-    () async => await HiveService().init(),
-    permanent: true,
+  final hiveBootstrap = await HiveService().init();
+  final settingsLocalService = SettingsLocalService(hiveBootstrap);
+  final tokenStorage = await TokenStorage().init();
+  final onboardingCompleted = settingsLocalService.getOnboardingCompleted();
+  final appRouter = AppRouterHost(completedOnboarding: onboardingCompleted);
+  final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  final appSnackbarService = AppSnackbarService(rootScaffoldMessengerKey);
+
+  appContainer = ProviderContainer(
+    overrides: [
+      hiveBootstrapProvider.overrideWith((ref) => hiveBootstrap),
+      tokenStorageProvider.overrideWith((ref) => tokenStorage),
+      appRouterProvider.overrideWith((ref) => appRouter),
+      appSnackbarServiceProvider.overrideWith((ref) => appSnackbarService),
+    ],
   );
 
-  // Load JWT tokens from OS keychain into memory cache before AuthService
-  await Get.putAsync<TokenStorage>(
-    () async => await TokenStorage().init(),
-    permanent: true,
-  );
-
-  Get.put(SettingsService(), permanent: true);
-  Get.put(BookmarkService(), permanent: true);
-
-  // AuthService must be initialised before the UI renders so the access token
-  // is ready for the first API call (home feed, bundled articles, etc.)
-  await Get.putAsync<AuthService>(
-    () async => await AuthService().init(),
-    permanent: true,
-  );
-  await setupRouter();
-
-  // Non-critical services can initialise in the background
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _initializeBackgroundServices();
-  });
+  await appContainer.read(authServiceProvider).init();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
@@ -63,39 +56,44 @@ void main() async {
     ),
   );
 
-  runApp(const MyApp());
-}
-
-void _initializeBackgroundServices() {
-  unawaited(MobileAds.instance.initialize());
-
-  unawaited(
-    Get.putAsync<FCMService>(() async {
-      final service = FCMService();
-      await service.initializeIfNeeded();
-      return service;
-    }, permanent: true),
+  runApp(
+    UncontrolledProviderScope(container: appContainer, child: const MyApp()),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return GetX<SettingsService>(
-      builder: (settingsService) {
-        final themeMode = settingsService.themeMode;
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
 
-        return MaterialApp.router(
-          title: 'Pulp News',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: themeMode,
-          routerConfig: goRouter,
-          debugShowCheckedModeBanner: false,
-        );
-      },
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(MobileAds.instance.initialize());
+      unawaited(ref.read(fcmServiceProvider).initializeIfNeeded());
+      final context = ref.read(appRouterProvider).currentContext;
+      if (context != null && context.mounted) {
+        unawaited(checkAppVersion(context));
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final settingsState = ref.watch(settingsServiceProvider);
+
+    return MaterialApp.router(
+      title: 'Pulp News',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: settingsState.themeMode,
+      routerConfig: ref.watch(appRouterProvider).router,
+      scaffoldMessengerKey: ref.read(appSnackbarServiceProvider).messengerKey,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

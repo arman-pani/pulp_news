@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:odiya_news_app/core/constants/app_strings.dart';
+import 'package:odiya_news_app/features/explore/controllers/category_controller.dart';
+import 'package:odiya_news_app/features/explore/widgets/news_card.dart';
+import 'package:odiya_news_app/core/widgets/no_objects_placeholder.dart';
+
+class CategoryPage extends ConsumerWidget {
+  final String categoryName;
+
+  const CategoryPage({super.key, required this.categoryName});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categoryState = ref.watch(categoryControllerProvider(categoryName));
+    final controller = ref.read(
+      categoryControllerProvider(categoryName).notifier,
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 0,
+        title: Text(
+          categoryName,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        surfaceTintColor: Theme.of(context).colorScheme.surface,
+        elevation: 0,
+      ),
+      body: categoryState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => NoObjectsPlaceholder(
+          title: AppStrings.noArticles,
+          icon: Icons.article_outlined,
+          subTitle: AppStrings.checkBackLater,
+        ),
+        data: (state) {
+          if (state.articles.isEmpty) {
+            return NoObjectsPlaceholder(
+              title: AppStrings.noArticles,
+              icon: Icons.article_outlined,
+              subTitle: AppStrings.checkBackLater,
+            );
+          }
+
+          final totalItemCount =
+              state.articles.length +
+              (state.isLoadingMore && state.articles.isNotEmpty ? 1 : 0);
+
+          return RefreshIndicator(
+            onRefresh: controller.refreshArticles,
+            child: ListView.builder(
+              controller: controller.scrollController,
+              padding: const EdgeInsets.all(16.0),
+              itemCount: totalItemCount,
+              itemBuilder: (context, index) {
+                if (index == state.articles.length) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                final article = state.articles[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: NewsCard(newsModel: article),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
