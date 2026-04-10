@@ -29,11 +29,10 @@ class NewsCard extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () => context.pushNamed(AppRoutes.articleDetail, extra: newsModel),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      onTap: () => context.push(AppRoutes.article, extra: newsModel),
+      child: Card(
+        elevation: 20,
         child: Column(
-          spacing: 12.0,
           children: [
             Stack(
               children: [
@@ -57,27 +56,6 @@ class NewsCard extends ConsumerWidget {
                         Icons.image,
                         size: 50,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 12,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      newsModel.category,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -107,44 +85,38 @@ class NewsCard extends ConsumerWidget {
                 ),
               ],
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.max,
-              spacing: 8.0,
-              children: [
-                Text(
-                  newsModel.title,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                spacing: 8.0,
+                children: [
+                  Text(
+                    newsModel.title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      newsModel.relativeTime,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    spacing: 8.0,
+                    children: [
+                      Text(
+                        "${newsModel.relativeTime} | ${newsModel.sourceName}",
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    Text(
-                      newsModel.sourceName,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  newsModel.content,
-                  style: Theme.of(context).textTheme.bodySmall,
-                  maxLines: 3,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

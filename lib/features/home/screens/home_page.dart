@@ -2,32 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
-import 'package:odiya_news_app/features/explore/controllers/explore_controller.dart';
+import 'package:odiya_news_app/core/widgets/try_again_placeholder.dart';
+import 'package:odiya_news_app/features/home/controllers/explore_controller.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
-import 'package:odiya_news_app/features/explore/widgets/trending_news.dart';
-import 'package:odiya_news_app/features/explore/widgets/category_news_tabview.dart';
-import 'package:odiya_news_app/features/explore/widgets/search_bar.dart'
-    as custom;
+import 'package:odiya_news_app/features/home/widgets/trending_news.dart';
+import 'package:odiya_news_app/features/home/widgets/category_news_tabview.dart';
+import 'package:odiya_news_app/features/home/widgets/custom_search_bar.dart';
 import 'package:odiya_news_app/core/widgets/no_objects_placeholder.dart';
 
-class ExplorePage extends ConsumerWidget {
-  const ExplorePage({super.key});
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void navigateToSearch() => context.pushNamed(AppRoutes.search);
+    void navigateToSearch() => context.push(AppRoutes.search);
     final exploreState = ref.watch(exploreControllerProvider);
 
     return SafeArea(
       child: exploreState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => NoObjectsPlaceholder(
-          title: AppStrings.noArticles,
-          icon: Icons.article_outlined,
-          subTitle: AppStrings.checkBackLater,
+        error: (_, __) => TryAgainPlaceholder(
+          onRetry: () => ref.invalidate(exploreControllerProvider),
         ),
         data: (state) {
           if (state.categoryArticles.isEmpty) {
+            debugPrint("categoryArticles is empty");
             return NoObjectsPlaceholder(
               title: AppStrings.noArticles,
               icon: Icons.article_outlined,
@@ -40,7 +39,7 @@ class ExplorePage extends ConsumerWidget {
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: custom.CustomSearchBar(
+                  child: CustomSearchBar(
                     readOnly: true,
                     onTap: navigateToSearch,
                     padding: const EdgeInsets.symmetric(
@@ -75,7 +74,7 @@ class ExplorePage extends ConsumerWidget {
                 ),
                 SliverFillRemaining(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: CategoriesTabView(state: state),
                   ),
                 ),

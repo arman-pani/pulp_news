@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
-import 'package:odiya_news_app/features/explore/controllers/category_controller.dart';
-import 'package:odiya_news_app/features/explore/widgets/news_card.dart';
+import 'package:odiya_news_app/features/home/controllers/category_controller.dart';
+import 'package:odiya_news_app/features/home/widgets/news_card.dart';
 import 'package:odiya_news_app/core/widgets/no_objects_placeholder.dart';
 
 class CategoryPage extends ConsumerWidget {
@@ -51,7 +51,7 @@ class CategoryPage extends ConsumerWidget {
             onRefresh: controller.refreshArticles,
             child: ListView.builder(
               controller: controller.scrollController,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(12.0),
               itemCount: totalItemCount,
               itemBuilder: (context, index) {
                 if (index == state.articles.length) {
@@ -65,7 +65,7 @@ class CategoryPage extends ConsumerWidget {
 
                 final article = state.articles[index];
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: const EdgeInsets.only(bottom: 4.0),
                   child: NewsCard(newsModel: article),
                 );
               },

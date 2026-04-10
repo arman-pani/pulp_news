@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'home_controller.dart';
+part of 'feed_controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,34 +15,29 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$HomeScreenState {
+mixin _$FeedScreenState {
   List<NewsModel> get articles => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   bool get noMoreArticles => throw _privateConstructorUsedError;
-  bool get isNativeAdLoaded => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $HomeScreenStateCopyWith<HomeScreenState> get copyWith =>
+  $FeedScreenStateCopyWith<FeedScreenState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $HomeScreenStateCopyWith<$Res> {
-  factory $HomeScreenStateCopyWith(
-          HomeScreenState value, $Res Function(HomeScreenState) then) =
-      _$HomeScreenStateCopyWithImpl<$Res, HomeScreenState>;
+abstract class $FeedScreenStateCopyWith<$Res> {
+  factory $FeedScreenStateCopyWith(
+          FeedScreenState value, $Res Function(FeedScreenState) then) =
+      _$FeedScreenStateCopyWithImpl<$Res, FeedScreenState>;
   @useResult
-  $Res call(
-      {List<NewsModel> articles,
-      bool isLoading,
-      bool noMoreArticles,
-      bool isNativeAdLoaded});
+  $Res call({List<NewsModel> articles, bool isLoading, bool noMoreArticles});
 }
 
 /// @nodoc
-class _$HomeScreenStateCopyWithImpl<$Res, $Val extends HomeScreenState>
-    implements $HomeScreenStateCopyWith<$Res> {
-  _$HomeScreenStateCopyWithImpl(this._value, this._then);
+class _$FeedScreenStateCopyWithImpl<$Res, $Val extends FeedScreenState>
+    implements $FeedScreenStateCopyWith<$Res> {
+  _$FeedScreenStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -55,7 +50,6 @@ class _$HomeScreenStateCopyWithImpl<$Res, $Val extends HomeScreenState>
     Object? articles = null,
     Object? isLoading = null,
     Object? noMoreArticles = null,
-    Object? isNativeAdLoaded = null,
   }) {
     return _then(_value.copyWith(
       articles: null == articles
@@ -70,35 +64,27 @@ class _$HomeScreenStateCopyWithImpl<$Res, $Val extends HomeScreenState>
           ? _value.noMoreArticles
           : noMoreArticles // ignore: cast_nullable_to_non_nullable
               as bool,
-      isNativeAdLoaded: null == isNativeAdLoaded
-          ? _value.isNativeAdLoaded
-          : isNativeAdLoaded // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$HomeScreenStateImplCopyWith<$Res>
-    implements $HomeScreenStateCopyWith<$Res> {
-  factory _$$HomeScreenStateImplCopyWith(_$HomeScreenStateImpl value,
-          $Res Function(_$HomeScreenStateImpl) then) =
-      __$$HomeScreenStateImplCopyWithImpl<$Res>;
+abstract class _$$FeedScreenStateImplCopyWith<$Res>
+    implements $FeedScreenStateCopyWith<$Res> {
+  factory _$$FeedScreenStateImplCopyWith(_$FeedScreenStateImpl value,
+          $Res Function(_$FeedScreenStateImpl) then) =
+      __$$FeedScreenStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<NewsModel> articles,
-      bool isLoading,
-      bool noMoreArticles,
-      bool isNativeAdLoaded});
+  $Res call({List<NewsModel> articles, bool isLoading, bool noMoreArticles});
 }
 
 /// @nodoc
-class __$$HomeScreenStateImplCopyWithImpl<$Res>
-    extends _$HomeScreenStateCopyWithImpl<$Res, _$HomeScreenStateImpl>
-    implements _$$HomeScreenStateImplCopyWith<$Res> {
-  __$$HomeScreenStateImplCopyWithImpl(
-      _$HomeScreenStateImpl _value, $Res Function(_$HomeScreenStateImpl) _then)
+class __$$FeedScreenStateImplCopyWithImpl<$Res>
+    extends _$FeedScreenStateCopyWithImpl<$Res, _$FeedScreenStateImpl>
+    implements _$$FeedScreenStateImplCopyWith<$Res> {
+  __$$FeedScreenStateImplCopyWithImpl(
+      _$FeedScreenStateImpl _value, $Res Function(_$FeedScreenStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -107,9 +93,8 @@ class __$$HomeScreenStateImplCopyWithImpl<$Res>
     Object? articles = null,
     Object? isLoading = null,
     Object? noMoreArticles = null,
-    Object? isNativeAdLoaded = null,
   }) {
-    return _then(_$HomeScreenStateImpl(
+    return _then(_$FeedScreenStateImpl(
       articles: null == articles
           ? _value._articles
           : articles // ignore: cast_nullable_to_non_nullable
@@ -122,22 +107,17 @@ class __$$HomeScreenStateImplCopyWithImpl<$Res>
           ? _value.noMoreArticles
           : noMoreArticles // ignore: cast_nullable_to_non_nullable
               as bool,
-      isNativeAdLoaded: null == isNativeAdLoaded
-          ? _value.isNativeAdLoaded
-          : isNativeAdLoaded // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
 
 /// @nodoc
 
-class _$HomeScreenStateImpl implements _HomeScreenState {
-  const _$HomeScreenStateImpl(
+class _$FeedScreenStateImpl implements _FeedScreenState {
+  const _$FeedScreenStateImpl(
       {final List<NewsModel> articles = const <NewsModel>[],
       this.isLoading = false,
-      this.noMoreArticles = false,
-      this.isNativeAdLoaded = false})
+      this.noMoreArticles = false})
       : _articles = articles;
 
   final List<NewsModel> _articles;
@@ -155,27 +135,22 @@ class _$HomeScreenStateImpl implements _HomeScreenState {
   @override
   @JsonKey()
   final bool noMoreArticles;
-  @override
-  @JsonKey()
-  final bool isNativeAdLoaded;
 
   @override
   String toString() {
-    return 'HomeScreenState(articles: $articles, isLoading: $isLoading, noMoreArticles: $noMoreArticles, isNativeAdLoaded: $isNativeAdLoaded)';
+    return 'FeedScreenState(articles: $articles, isLoading: $isLoading, noMoreArticles: $noMoreArticles)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HomeScreenStateImpl &&
+            other is _$FeedScreenStateImpl &&
             const DeepCollectionEquality().equals(other._articles, _articles) &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.noMoreArticles, noMoreArticles) ||
-                other.noMoreArticles == noMoreArticles) &&
-            (identical(other.isNativeAdLoaded, isNativeAdLoaded) ||
-                other.isNativeAdLoaded == isNativeAdLoaded));
+                other.noMoreArticles == noMoreArticles));
   }
 
   @override
@@ -183,23 +158,21 @@ class _$HomeScreenStateImpl implements _HomeScreenState {
       runtimeType,
       const DeepCollectionEquality().hash(_articles),
       isLoading,
-      noMoreArticles,
-      isNativeAdLoaded);
+      noMoreArticles);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$HomeScreenStateImplCopyWith<_$HomeScreenStateImpl> get copyWith =>
-      __$$HomeScreenStateImplCopyWithImpl<_$HomeScreenStateImpl>(
+  _$$FeedScreenStateImplCopyWith<_$FeedScreenStateImpl> get copyWith =>
+      __$$FeedScreenStateImplCopyWithImpl<_$FeedScreenStateImpl>(
           this, _$identity);
 }
 
-abstract class _HomeScreenState implements HomeScreenState {
-  const factory _HomeScreenState(
+abstract class _FeedScreenState implements FeedScreenState {
+  const factory _FeedScreenState(
       {final List<NewsModel> articles,
       final bool isLoading,
-      final bool noMoreArticles,
-      final bool isNativeAdLoaded}) = _$HomeScreenStateImpl;
+      final bool noMoreArticles}) = _$FeedScreenStateImpl;
 
   @override
   List<NewsModel> get articles;
@@ -208,9 +181,7 @@ abstract class _HomeScreenState implements HomeScreenState {
   @override
   bool get noMoreArticles;
   @override
-  bool get isNativeAdLoaded;
-  @override
   @JsonKey(ignore: true)
-  _$$HomeScreenStateImplCopyWith<_$HomeScreenStateImpl> get copyWith =>
+  _$$FeedScreenStateImplCopyWith<_$FeedScreenStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

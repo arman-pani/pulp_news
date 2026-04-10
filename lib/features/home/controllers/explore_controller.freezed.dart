@@ -20,7 +20,7 @@ mixin _$ExploreScreenState {
   List<NewsModel> get trendingNews => throw _privateConstructorUsedError;
   Map<String, List<NewsModel>> get categoryArticles =>
       throw _privateConstructorUsedError;
-  Map<String, dynamic> get bundledArticles =>
+  BundledArticlesResponse? get bundledArticles =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -38,7 +38,9 @@ abstract class $ExploreScreenStateCopyWith<$Res> {
       {List<String> categories,
       List<NewsModel> trendingNews,
       Map<String, List<NewsModel>> categoryArticles,
-      Map<String, dynamic> bundledArticles});
+      BundledArticlesResponse? bundledArticles});
+
+  $BundledArticlesResponseCopyWith<$Res>? get bundledArticles;
 }
 
 /// @nodoc
@@ -57,7 +59,7 @@ class _$ExploreScreenStateCopyWithImpl<$Res, $Val extends ExploreScreenState>
     Object? categories = null,
     Object? trendingNews = null,
     Object? categoryArticles = null,
-    Object? bundledArticles = null,
+    Object? bundledArticles = freezed,
   }) {
     return _then(_value.copyWith(
       categories: null == categories
@@ -72,11 +74,24 @@ class _$ExploreScreenStateCopyWithImpl<$Res, $Val extends ExploreScreenState>
           ? _value.categoryArticles
           : categoryArticles // ignore: cast_nullable_to_non_nullable
               as Map<String, List<NewsModel>>,
-      bundledArticles: null == bundledArticles
+      bundledArticles: freezed == bundledArticles
           ? _value.bundledArticles
           : bundledArticles // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as BundledArticlesResponse?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $BundledArticlesResponseCopyWith<$Res>? get bundledArticles {
+    if (_value.bundledArticles == null) {
+      return null;
+    }
+
+    return $BundledArticlesResponseCopyWith<$Res>(_value.bundledArticles!,
+        (value) {
+      return _then(_value.copyWith(bundledArticles: value) as $Val);
+    });
   }
 }
 
@@ -92,7 +107,10 @@ abstract class _$$ExploreScreenStateImplCopyWith<$Res>
       {List<String> categories,
       List<NewsModel> trendingNews,
       Map<String, List<NewsModel>> categoryArticles,
-      Map<String, dynamic> bundledArticles});
+      BundledArticlesResponse? bundledArticles});
+
+  @override
+  $BundledArticlesResponseCopyWith<$Res>? get bundledArticles;
 }
 
 /// @nodoc
@@ -109,7 +127,7 @@ class __$$ExploreScreenStateImplCopyWithImpl<$Res>
     Object? categories = null,
     Object? trendingNews = null,
     Object? categoryArticles = null,
-    Object? bundledArticles = null,
+    Object? bundledArticles = freezed,
   }) {
     return _then(_$ExploreScreenStateImpl(
       categories: null == categories
@@ -124,10 +142,10 @@ class __$$ExploreScreenStateImplCopyWithImpl<$Res>
           ? _value._categoryArticles
           : categoryArticles // ignore: cast_nullable_to_non_nullable
               as Map<String, List<NewsModel>>,
-      bundledArticles: null == bundledArticles
-          ? _value._bundledArticles
+      bundledArticles: freezed == bundledArticles
+          ? _value.bundledArticles
           : bundledArticles // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
+              as BundledArticlesResponse?,
     ));
   }
 }
@@ -140,11 +158,10 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
       final List<NewsModel> trendingNews = const <NewsModel>[],
       final Map<String, List<NewsModel>> categoryArticles =
           const <String, List<NewsModel>>{},
-      final Map<String, dynamic> bundledArticles = const <String, dynamic>{}})
+      this.bundledArticles})
       : _categories = categories,
         _trendingNews = trendingNews,
-        _categoryArticles = categoryArticles,
-        _bundledArticles = bundledArticles;
+        _categoryArticles = categoryArticles;
 
   final List<String> _categories;
   @override
@@ -173,14 +190,8 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
     return EqualUnmodifiableMapView(_categoryArticles);
   }
 
-  final Map<String, dynamic> _bundledArticles;
   @override
-  @JsonKey()
-  Map<String, dynamic> get bundledArticles {
-    if (_bundledArticles is EqualUnmodifiableMapView) return _bundledArticles;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_bundledArticles);
-  }
+  final BundledArticlesResponse? bundledArticles;
 
   @override
   String toString() {
@@ -198,8 +209,8 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
                 .equals(other._trendingNews, _trendingNews) &&
             const DeepCollectionEquality()
                 .equals(other._categoryArticles, _categoryArticles) &&
-            const DeepCollectionEquality()
-                .equals(other._bundledArticles, _bundledArticles));
+            (identical(other.bundledArticles, bundledArticles) ||
+                other.bundledArticles == bundledArticles));
   }
 
   @override
@@ -208,7 +219,7 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
       const DeepCollectionEquality().hash(_categories),
       const DeepCollectionEquality().hash(_trendingNews),
       const DeepCollectionEquality().hash(_categoryArticles),
-      const DeepCollectionEquality().hash(_bundledArticles));
+      bundledArticles);
 
   @JsonKey(ignore: true)
   @override
@@ -220,10 +231,11 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
 
 abstract class _ExploreScreenState implements ExploreScreenState {
   const factory _ExploreScreenState(
-      {final List<String> categories,
-      final List<NewsModel> trendingNews,
-      final Map<String, List<NewsModel>> categoryArticles,
-      final Map<String, dynamic> bundledArticles}) = _$ExploreScreenStateImpl;
+          {final List<String> categories,
+          final List<NewsModel> trendingNews,
+          final Map<String, List<NewsModel>> categoryArticles,
+          final BundledArticlesResponse? bundledArticles}) =
+      _$ExploreScreenStateImpl;
 
   @override
   List<String> get categories;
@@ -232,7 +244,7 @@ abstract class _ExploreScreenState implements ExploreScreenState {
   @override
   Map<String, List<NewsModel>> get categoryArticles;
   @override
-  Map<String, dynamic> get bundledArticles;
+  BundledArticlesResponse? get bundledArticles;
   @override
   @JsonKey(ignore: true)
   _$$ExploreScreenStateImplCopyWith<_$ExploreScreenStateImpl> get copyWith =>

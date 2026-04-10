@@ -39,19 +39,29 @@ class PublishedAtConverter implements JsonConverter<DateTime, Object?> {
 @HiveType(typeId: 0, adapterName: 'NewsModelAdapter')
 class NewsModel with _$NewsModel {
   const factory NewsModel({
-    @HiveField(0) required String id,
-    @HiveField(1) @JsonKey(name: 'source_name') required String sourceName,
-    @HiveField(2) @JsonKey(name: 'source_url') required String sourceUrl,
-    @HiveField(3) required String title,
-    @HiveField(4) required String author,
+    @HiveField(0) @Default('') String id,
+
+    @HiveField(1) @JsonKey(name: 'source_name') @Default('') String sourceName,
+
+    @HiveField(2) @JsonKey(name: 'source_url') @Default('') String sourceUrl,
+
+    @HiveField(3) @Default('') String title,
+
+    @HiveField(4) @Default('') String author,
+
     @HiveField(5)
     @JsonKey(name: 'published_at')
     @PublishedAtConverter()
     required DateTime publishedAt,
-    @HiveField(6) @JsonKey(name: 'image_url') required String imageUrl,
-    @HiveField(7) required String content,
-    @HiveField(8) required String category,
-    @HiveField(9) @JsonKey(name: 'created_at') required String createdAt,
+
+    @HiveField(6) @JsonKey(name: 'image_url') @Default('') String imageUrl,
+
+    @HiveField(7) @Default('') String content,
+
+    @HiveField(8) @Default('') String category,
+
+    @HiveField(9) @JsonKey(name: 'created_at') @Default('') String createdAt,
+
     @HiveField(10) @Default(false) bool isSeen,
   }) = _NewsModel;
 
@@ -61,21 +71,14 @@ class NewsModel with _$NewsModel {
   const NewsModel._();
 
   String get relativeTime => TimeFormatter.getRelativeTime(publishedAt);
-
   String get shortRelativeTime =>
       TimeFormatter.getShortRelativeTime(publishedAt);
-
   String get smartRelativeTime =>
       TimeFormatter.getSmartRelativeTime(publishedAt);
-
   String get formattedDate => TimeFormatter.getFormattedDate(publishedAt);
-
   String get formattedDateTime =>
       TimeFormatter.getFormattedDateTime(publishedAt);
-
   String get formattedTime => TimeFormatter.getFormattedTime(publishedAt);
-
   bool get isPublishedToday => TimeFormatter.isToday(publishedAt);
-
   bool get isPublishedYesterday => TimeFormatter.isYesterday(publishedAt);
 }

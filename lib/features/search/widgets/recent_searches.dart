@@ -74,7 +74,10 @@ class RecentSearches extends StatelessWidget {
                   final search = recentSearches[index];
                   return ListTile(
                     leading: const Icon(Icons.history),
-                    title: Text(search),
+                    title: Text(
+                      search,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                     onTap: () => onTapSearch(search),
                   );
                 },

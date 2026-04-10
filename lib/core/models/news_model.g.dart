@@ -76,16 +76,16 @@ class NewsModelAdapter extends TypeAdapter<NewsModel> {
 
 _$NewsModelImpl _$$NewsModelImplFromJson(Map<String, dynamic> json) =>
     _$NewsModelImpl(
-      id: json['id'] as String,
-      sourceName: json['source_name'] as String,
-      sourceUrl: json['source_url'] as String,
-      title: json['title'] as String,
-      author: json['author'] as String,
+      id: json['id'] as String? ?? '',
+      sourceName: json['source_name'] as String? ?? '',
+      sourceUrl: json['source_url'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      author: json['author'] as String? ?? '',
       publishedAt: const PublishedAtConverter().fromJson(json['published_at']),
-      imageUrl: json['image_url'] as String,
-      content: json['content'] as String,
-      category: json['category'] as String,
-      createdAt: json['created_at'] as String,
+      imageUrl: json['image_url'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      category: json['category'] as String? ?? '',
+      createdAt: json['created_at'] as String? ?? '',
       isSeen: json['isSeen'] as bool? ?? false,
     );
 

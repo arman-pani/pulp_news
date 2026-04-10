@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
-import 'package:odiya_news_app/features/explore/widgets/news_card.dart';
+import 'package:odiya_news_app/features/home/widgets/news_card.dart';
 import 'package:odiya_news_app/features/search/controllers/search_controller.dart';
 
 class SearchResults extends StatelessWidget {

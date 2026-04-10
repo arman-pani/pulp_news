@@ -36,14 +36,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
       unselectedLabelStyle: Theme.of(context).textTheme.bodyMedium,
       showUnselectedLabels: false,
       showSelectedLabels: false,
-      iconSize: 32,
+      iconSize: 30,
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: ''),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
             AppImages.exploreNavButton,
-            width: 32,
-            height: 32,
+            width: 30,
+            height: 30,
             colorFilter: ColorFilter.mode(
               _selectedIndex == 1
                   ? Theme.of(context).colorScheme.primary

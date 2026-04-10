@@ -30,7 +30,7 @@ class NewsListTile extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () => context.pushNamed(AppRoutes.articleDetail, extra: news),
+      onTap: () => context.push(AppRoutes.article, extra: news),
       child: Row(
         spacing: 12.0,
         mainAxisSize: MainAxisSize.max,
@@ -78,7 +78,7 @@ class NewsListTile extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    news.category,
+                    news.sourceName,
                     style: AppTextStyles.tag.copyWith(
                       color: AppColors.primaryOrange,
                     ),

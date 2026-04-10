@@ -27,8 +27,7 @@ class TreadingNews extends StatelessWidget {
             itemBuilder: (context, index) {
               final news = trendingNews[index];
               return GestureDetector(
-                onTap: () =>
-                    context.pushNamed(AppRoutes.articleDetail, extra: news),
+                onTap: () => context.push(AppRoutes.article, extra: news),
                 child: TrendingNewsCard(news: news, index: index),
               );
             },

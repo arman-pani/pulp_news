@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home_controller.dart';
+part of 'feed_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeControllerHash() => r'6d00269fe80b29fe959d6f73d254f609745df540';
+String _$feedControllerHash() => r'7cf6160f765ff26f599d9738b586363e26506244';
 
-/// See also [HomeController].
-@ProviderFor(HomeController)
-final homeControllerProvider =
-    AsyncNotifierProvider<HomeController, HomeScreenState>.internal(
-  HomeController.new,
-  name: r'homeControllerProvider',
+/// See also [FeedController].
+@ProviderFor(FeedController)
+final feedControllerProvider =
+    AsyncNotifierProvider<FeedController, FeedScreenState>.internal(
+  FeedController.new,
+  name: r'feedControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$homeControllerHash,
+      : _$feedControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$HomeController = AsyncNotifier<HomeScreenState>;
+typedef _$FeedController = AsyncNotifier<FeedScreenState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

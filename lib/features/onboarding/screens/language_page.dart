@@ -12,7 +12,6 @@ class LanguagePage extends ConsumerWidget {
     final languageState = ref.watch(languageControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.selectLanguage)),
       body: languageState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, __) => _LanguageErrorView(

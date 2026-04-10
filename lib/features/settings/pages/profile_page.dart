@@ -16,13 +16,13 @@ class ProfilePage extends StatelessWidget {
         title: AppStrings.bookmarks,
         subtitle: AppStrings.bookmarksDescription,
         leadingIcon: Icons.bookmark_outline,
-        onTap: () => context.pushNamed(AppRoutes.bookmark),
+        onTap: () => context.push(AppRoutes.bookmark),
       ),
       SettingsTile(
         title: AppStrings.settings,
         subtitle: AppStrings.settingsDescription,
         leadingIcon: Icons.settings_rounded,
-        onTap: () => context.pushNamed(AppRoutes.settings),
+        onTap: () => context.push(AppRoutes.settings),
       ),
       SettingsTile(
         title: AppStrings.userFeedback,

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:odiya_news_app/core/models/bundled_articles_response.dart';
 import 'package:odiya_news_app/core/models/news_model.dart';
 
 class ArticlesRepository {
@@ -84,18 +85,17 @@ class ArticlesRepository {
   }
 
   /// Get the latest articles grouped by every permanent category.
-  Future<Map<String, dynamic>> getBundledArticles({
+  Future<BundledArticlesResponse> getBundledArticles({
     int limitPerCategory = 5,
   }) async {
-    try {
-      final response = await _dio.get(
-        '/articles/bundled',
-        queryParameters: {'limit_per_category': limitPerCategory},
-      );
-      return response.data as Map<String, dynamic>;
-    } catch (e) {
-      debugPrint('[ArticlesRepository] getBundledArticles error: $e');
-      rethrow;
-    }
+    final response = await _dio.get(
+      '/articles/bundled',
+      queryParameters: {'limit_per_category': limitPerCategory},
+    );
+    final bundledResponse = BundledArticlesResponse.fromJson(
+      Map<String, dynamic>.from(response.data),
+    );
+    debugPrint("bundledResponse: $bundledResponse");
+    return bundledResponse;
   }
 }

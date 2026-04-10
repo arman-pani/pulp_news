@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:odiya_news_app/core/ads/ad_unit_ids.dart';
 import 'package:odiya_news_app/core/local/settings_local_service.dart';
 import 'package:odiya_news_app/core/local/hive_service.dart';
 import 'package:odiya_news_app/core/local/token_storage.dart';
@@ -44,17 +45,14 @@ void main() async {
   );
 
   await appContainer.read(authServiceProvider).init();
+  final initializationStatus = await MobileAds.instance.initialize();
+  debugPrint(
+    '[Ads] Mobile Ads initialized.'
+    ' adapters=${initializationStatus.adapterStatuses.length}',
+  );
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ),
-  );
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   runApp(
     UncontrolledProviderScope(container: appContainer, child: const MyApp()),
@@ -72,8 +70,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
+    AdUnitIds.logResolvedConfig();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(MobileAds.instance.initialize());
       unawaited(ref.read(fcmServiceProvider).initializeIfNeeded());
       final context = ref.read(appRouterProvider).currentContext;
       if (context != null && context.mounted) {
@@ -86,14 +84,30 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     final settingsState = ref.watch(settingsServiceProvider);
 
-    return MaterialApp.router(
-      title: 'Pulp News',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: settingsState.themeMode,
-      routerConfig: ref.watch(appRouterProvider).router,
-      scaffoldMessengerKey: ref.read(appSnackbarServiceProvider).messengerKey,
-      debugShowCheckedModeBanner: false,
+    return Builder(
+      builder: (context) {
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.white,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.light,
+            systemNavigationBarColor: Colors.white,
+            systemNavigationBarDividerColor: Colors.white,
+            systemNavigationBarIconBrightness: Brightness.light,
+          ),
+          child: MaterialApp.router(
+            title: 'Pulp News',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: settingsState.themeMode,
+            routerConfig: ref.watch(appRouterProvider).router,
+            scaffoldMessengerKey: ref
+                .read(appSnackbarServiceProvider)
+                .messengerKey,
+            debugShowCheckedModeBanner: false,
+          ),
+        );
+      },
     );
   }
 }

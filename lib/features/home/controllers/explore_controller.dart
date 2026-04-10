@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:odiya_news_app/core/models/bundled_articles_response.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:odiya_news_app/core/providers/app_providers.dart';
 import 'package:odiya_news_app/core/models/news_model.dart';
+import 'package:odiya_news_app/core/providers/app_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'explore_controller.freezed.dart';
 part 'explore_controller.g.dart';
@@ -13,7 +15,7 @@ class ExploreScreenState with _$ExploreScreenState {
     @Default(<NewsModel>[]) List<NewsModel> trendingNews,
     @Default(<String, List<NewsModel>>{})
     Map<String, List<NewsModel>> categoryArticles,
-    @Default(<String, dynamic>{}) Map<String, dynamic> bundledArticles,
+    BundledArticlesResponse? bundledArticles,
   }) = _ExploreScreenState;
 }
 
@@ -34,24 +36,26 @@ class ExploreController extends _$ExploreController {
         .read(articlesRepositoryProvider)
         .getBundledArticles(limitPerCategory: 5);
 
-    final categoriesData =
-        response['categories'] as Map<String, dynamic>? ?? {};
-    final categories = categoriesData.keys.cast<String>().toList();
+    final categories = response.categories.keys.toList();
     final categoryArticles = <String, List<NewsModel>>{};
     final trendingNews = <NewsModel>[];
 
+    debugPrint("categories: $categories");
+    debugPrint("trendingNews: $trendingNews");
+
     for (final categoryName in categories) {
-      final categoryData = categoriesData[categoryName] as Map<String, dynamic>;
-      final rawArticles = (categoryData['articles'] as List? ?? const [])
-          .map((item) => Map<String, dynamic>.from(item as Map))
-          .toList();
-      final articles = rawArticles.map(NewsModel.fromJson).toList();
+      final articles = response.categories[categoryName]?.articles ?? const [];
+      if (articles.isEmpty) continue;
+
       categoryArticles[categoryName] = articles;
 
       if (articles.length > 2) {
         trendingNews.add(articles[2]);
       }
     }
+
+    debugPrint("categories: $categories");
+    debugPrint("trendingNews: $trendingNews");
 
     return ExploreScreenState(
       categories: categories,

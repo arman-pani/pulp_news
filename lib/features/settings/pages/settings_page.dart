@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
+import 'package:odiya_news_app/core/widgets/common_appbar.dart';
 import 'package:odiya_news_app/features/settings/controllers/settings_service.dart';
 import 'package:odiya_news_app/features/settings/widgets/settings_tile.dart';
 
@@ -16,13 +17,7 @@ class SettingsPage extends ConsumerWidget {
     final isDark = settingsState.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        title: Text(
-          AppStrings.settings,
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-      ),
+      appBar: CommonAppbar(title: AppStrings.settings),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
         children: [
@@ -40,7 +35,7 @@ class SettingsPage extends ConsumerWidget {
             leadingIcon: Icons.language,
             title: AppStrings.selectLanguage,
             subtitle: settingsService.languageDisplayName,
-            onTap: () => context.pushNamed(AppRoutes.language),
+            onTap: () => context.push(AppRoutes.language),
           ),
           SettingsTile(
             leadingIcon: settingsState.notificationsEnabled

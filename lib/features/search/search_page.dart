@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
 import 'package:odiya_news_app/core/widgets/common_appbar.dart';
-import 'package:odiya_news_app/features/explore/widgets/search_bar.dart';
+import 'package:odiya_news_app/features/home/widgets/custom_search_bar.dart';
 import 'package:odiya_news_app/features/search/controllers/search_controller.dart';
 import 'package:odiya_news_app/features/search/widgets/recent_searches.dart';
 import 'package:odiya_news_app/features/search/widgets/search_results.dart';

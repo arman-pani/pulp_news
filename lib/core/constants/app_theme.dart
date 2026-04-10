@@ -6,6 +6,8 @@ class AppTheme {
   // Light Theme
   static ThemeData get lightTheme {
     return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
       useMaterial3: true,
       brightness: Brightness.light,
       primarySwatch: MaterialColor(0xFFE47122, {
@@ -173,6 +175,8 @@ class AppTheme {
   // Dark Theme
   static ThemeData get darkTheme {
     return ThemeData(
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
       useMaterial3: true,
       brightness: Brightness.dark,
       primarySwatch: MaterialColor(0xFFE47122, {

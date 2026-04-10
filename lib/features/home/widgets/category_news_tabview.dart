@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
-import 'package:odiya_news_app/features/explore/controllers/explore_controller.dart';
+import 'package:odiya_news_app/features/home/controllers/explore_controller.dart';
 import 'package:odiya_news_app/core/models/news_model.dart';
 import 'package:odiya_news_app/core/widgets/news_list_tile.dart';
 import 'package:odiya_news_app/core/widgets/no_objects_placeholder.dart';
@@ -16,6 +16,7 @@ class CategoriesTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = state.categories;
     return TabBarView(
+      physics: const NeverScrollableScrollPhysics(),
       children: List.generate(state.categories.length, (index) {
         final category = categories[index];
         final articles =
@@ -43,10 +44,7 @@ class CategoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void showMoreButton() => context.pushNamed(
-      AppRoutes.category,
-      pathParameters: {'categoryName': Uri.encodeComponent(category)},
-    );
+    void showMoreButton() => context.push(AppRoutes.category, extra: category);
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       shrinkWrap: true,
@@ -60,7 +58,7 @@ class CategoryTab extends StatelessWidget {
           children: [
             NewsListTile(news: news),
             if (index == articles.length - 1)
-              _buildShowMoreButton(showMoreButton),
+              _buildShowMoreButton(showMoreButton, context),
           ],
         );
       },
@@ -68,18 +66,18 @@ class CategoryTab extends StatelessWidget {
     );
   }
 
-  Widget _buildShowMoreButton(VoidCallback onPressed) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: const Icon(Icons.arrow_forward),
-        iconAlignment: IconAlignment.end,
-        label: Text(AppStrings.showMore),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+  Widget _buildShowMoreButton(VoidCallback onPressed, BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(
+          width: 2.0,
+          color: Theme.of(context).colorScheme.primary,
         ),
+        minimumSize: const Size(double.infinity, 0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
       ),
+      child: Text(AppStrings.showMore, style: TextStyle(fontSize: 16)),
     );
   }
 }

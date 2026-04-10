@@ -11,7 +11,7 @@ import 'package:odiya_news_app/core/local/hive_service.dart';
 import 'package:odiya_news_app/core/local/notifications_local_service.dart';
 import 'package:odiya_news_app/core/providers/app_providers.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
-import 'package:odiya_news_app/features/feed/controllers/home_controller.dart';
+import 'package:odiya_news_app/features/feed/controllers/feed_controller.dart';
 import 'package:odiya_news_app/firebase_options.dart';
 import 'package:odiya_news_app/core/models/news_model.dart';
 
@@ -122,9 +122,9 @@ class FCMService {
     try {
       final article = NewsModel.fromJson(data);
       await ref
-          .read(homeControllerProvider.notifier)
+          .read(feedControllerProvider.notifier)
           .addNotificationArticle(article);
-      ref.read(appRouterProvider).router.goNamed(AppRoutes.explore);
+      ref.read(appRouterProvider).router.go(AppRoutes.home);
     } catch (e) {
       debugPrint('Error processing notification: $e');
       await ref

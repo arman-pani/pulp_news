@@ -78,7 +78,7 @@ class LanguageController extends _$LanguageController {
         await authService.refreshSession();
       }
 
-      ref.read(appRouterProvider).router.goNamed(AppRoutes.explore);
+      ref.read(appRouterProvider).router.go(AppRoutes.home);
       _initializeDeferredFcm();
       state = AsyncData(currentState.copyWith(isSubmitting: false));
     } catch (error, stackTrace) {

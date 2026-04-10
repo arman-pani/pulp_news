@@ -249,23 +249,22 @@ class __$$NewsModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _$NewsModelImpl extends _NewsModel {
   const _$NewsModelImpl(
-      {@HiveField(0) required this.id,
-      @HiveField(1) @JsonKey(name: 'source_name') required this.sourceName,
-      @HiveField(2) @JsonKey(name: 'source_url') required this.sourceUrl,
-      @HiveField(3) required this.title,
-      @HiveField(4) required this.author,
+      {@HiveField(0) this.id = '',
+      @HiveField(1) @JsonKey(name: 'source_name') this.sourceName = '',
+      @HiveField(2) @JsonKey(name: 'source_url') this.sourceUrl = '',
+      @HiveField(3) this.title = '',
+      @HiveField(4) this.author = '',
       @HiveField(5)
       @JsonKey(name: 'published_at')
       @PublishedAtConverter()
       required this.publishedAt,
-      @HiveField(6) @JsonKey(name: 'image_url') required this.imageUrl,
-      @HiveField(7) required this.content,
-      @HiveField(8) required this.category,
-      @HiveField(9) @JsonKey(name: 'created_at') required this.createdAt,
+      @HiveField(6) @JsonKey(name: 'image_url') this.imageUrl = '',
+      @HiveField(7) this.content = '',
+      @HiveField(8) this.category = '',
+      @HiveField(9) @JsonKey(name: 'created_at') this.createdAt = '',
       @HiveField(10) this.isSeen = false})
       : super._();
 
@@ -273,6 +272,7 @@ class _$NewsModelImpl extends _NewsModel {
       _$$NewsModelImplFromJson(json);
 
   @override
+  @JsonKey()
   @HiveField(0)
   final String id;
   @override
@@ -284,9 +284,11 @@ class _$NewsModelImpl extends _NewsModel {
   @JsonKey(name: 'source_url')
   final String sourceUrl;
   @override
+  @JsonKey()
   @HiveField(3)
   final String title;
   @override
+  @JsonKey()
   @HiveField(4)
   final String author;
   @override
@@ -299,9 +301,11 @@ class _$NewsModelImpl extends _NewsModel {
   @JsonKey(name: 'image_url')
   final String imageUrl;
   @override
+  @JsonKey()
   @HiveField(7)
   final String content;
   @override
+  @JsonKey()
   @HiveField(8)
   final String category;
   @override
@@ -363,25 +367,19 @@ class _$NewsModelImpl extends _NewsModel {
 
 abstract class _NewsModel extends NewsModel {
   const factory _NewsModel(
-      {@HiveField(0) required final String id,
-      @HiveField(1)
-      @JsonKey(name: 'source_name')
-      required final String sourceName,
-      @HiveField(2)
-      @JsonKey(name: 'source_url')
-      required final String sourceUrl,
-      @HiveField(3) required final String title,
-      @HiveField(4) required final String author,
+      {@HiveField(0) final String id,
+      @HiveField(1) @JsonKey(name: 'source_name') final String sourceName,
+      @HiveField(2) @JsonKey(name: 'source_url') final String sourceUrl,
+      @HiveField(3) final String title,
+      @HiveField(4) final String author,
       @HiveField(5)
       @JsonKey(name: 'published_at')
       @PublishedAtConverter()
       required final DateTime publishedAt,
-      @HiveField(6) @JsonKey(name: 'image_url') required final String imageUrl,
-      @HiveField(7) required final String content,
-      @HiveField(8) required final String category,
-      @HiveField(9)
-      @JsonKey(name: 'created_at')
-      required final String createdAt,
+      @HiveField(6) @JsonKey(name: 'image_url') final String imageUrl,
+      @HiveField(7) final String content,
+      @HiveField(8) final String category,
+      @HiveField(9) @JsonKey(name: 'created_at') final String createdAt,
       @HiveField(10) final bool isSeen}) = _$NewsModelImpl;
   const _NewsModel._() : super._();
 

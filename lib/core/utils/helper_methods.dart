@@ -39,10 +39,7 @@ Future<void> checkAppVersion(BuildContext context) async {
 Future<void> launchSourceUrl(String sourceUrl, BuildContext context) async {
   try {
     // Navigate to web view page instead of external browser
-    context.pushNamed(
-      AppRoutes.webView,
-      queryParameters: {'url': sourceUrl, 'title': 'Source Article'},
-    );
+    context.push(AppRoutes.webView, extra: sourceUrl);
   } catch (e) {
     debugPrint('${AppStrings.urlLaunchError}: $e');
     ProviderScope.containerOf(
