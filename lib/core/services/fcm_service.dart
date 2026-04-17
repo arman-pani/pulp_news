@@ -207,6 +207,26 @@ class FCMService {
     );
   }
 
+  Future<void> subscribeToLanguageTopic(String languageCode) async {
+    try {
+      await _messaging.subscribeToTopic('news_$languageCode');
+      debugPrint('[FCM] Subscribed to topic: news_$languageCode');
+    } catch (e) {
+      debugPrint('[FCM] Failed to subscribe to topic: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> unsubscribeFromLanguageTopic(String languageCode) async {
+    try {
+      await _messaging.unsubscribeFromTopic('news_$languageCode');
+      debugPrint('[FCM] Unsubscribed from topic: news_$languageCode');
+    } catch (e) {
+      debugPrint('[FCM] Failed to unsubscribe from topic: $e');
+      rethrow;
+    }
+  }
+
   Future<bool> requestPermission() async {
     final settings = await _messaging.requestPermission(
       alert: true,

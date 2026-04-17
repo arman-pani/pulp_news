@@ -25,8 +25,22 @@ class SettingsLocalService {
     await _hiveService.settingsBox.put(languageKey, language);
   }
 
-  String getLanguage() {
-    return _hiveService.settingsBox.get(languageKey, defaultValue: 'en') ?? 'en';
+  String getLanguageCode() {
+    return _hiveService.settingsBox.get(languageKey, defaultValue: 'english') ??
+        'english';
+  }
+
+  String getLanguageDisplayName() {
+    switch (getLanguageCode()) {
+      case 'english':
+        return 'English';
+      case 'odia':
+        return 'Odia';
+      case 'bengali':
+        return 'Bengali';
+      default:
+        return 'English';
+    }
   }
 
   Future<void> setOnboardingCompleted(bool completed) async {

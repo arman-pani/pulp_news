@@ -5,24 +5,24 @@ import 'package:odiya_news_app/core/models/news_model.dart';
 import 'package:odiya_news_app/core/providers/app_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'explore_controller.freezed.dart';
-part 'explore_controller.g.dart';
+part 'home_controller.freezed.dart';
+part 'home_controller.g.dart';
 
 @freezed
-class ExploreScreenState with _$ExploreScreenState {
-  const factory ExploreScreenState({
+class HomeScreenState with _$HomeScreenState {
+  const factory HomeScreenState({
     @Default(<String>[]) List<String> categories,
     @Default(<NewsModel>[]) List<NewsModel> trendingNews,
     @Default(<String, List<NewsModel>>{})
     Map<String, List<NewsModel>> categoryArticles,
     BundledArticlesResponse? bundledArticles,
-  }) = _ExploreScreenState;
+  }) = _HomeScreenState;
 }
 
 @Riverpod(keepAlive: true)
-class ExploreController extends _$ExploreController {
+class HomeController extends _$HomeController {
   @override
-  Future<ExploreScreenState> build() async {
+  Future<HomeScreenState> build() async {
     return _loadBundledArticles();
   }
 
@@ -31,14 +31,16 @@ class ExploreController extends _$ExploreController {
     state = await AsyncValue.guard(_loadBundledArticles);
   }
 
-  Future<ExploreScreenState> _loadBundledArticles() async {
+  Future<HomeScreenState> _loadBundledArticles() async {
     final response = await ref
         .read(articlesRepositoryProvider)
         .getBundledArticles(limitPerCategory: 5);
 
     final categories = response.categories.keys.toList();
     final categoryArticles = <String, List<NewsModel>>{};
-    final trendingNews = <NewsModel>[];
+    
+    // Use trending news directly from the response
+    final trendingNews = response.trending;
 
     debugPrint("categories: $categories");
     debugPrint("trendingNews: $trendingNews");
@@ -48,16 +50,12 @@ class ExploreController extends _$ExploreController {
       if (articles.isEmpty) continue;
 
       categoryArticles[categoryName] = articles;
-
-      if (articles.length > 2) {
-        trendingNews.add(articles[2]);
-      }
     }
 
     debugPrint("categories: $categories");
     debugPrint("trendingNews: $trendingNews");
 
-    return ExploreScreenState(
+    return HomeScreenState(
       categories: categories,
       trendingNews: trendingNews,
       categoryArticles: categoryArticles,

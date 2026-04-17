@@ -60,6 +60,10 @@ class NotificationsLocalService {
         .toList();
   }
 
+  Future<void> clearPendingNotificationArticles() async {
+    await _hiveService.settingsBox.delete(pendingNotificationArticlesKey);
+  }
+
   Future<void> setNotificationEnabled(bool enabled) async {
     await _hiveService.settingsBox.put(
       notificationsEnabledKey,

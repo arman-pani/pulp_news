@@ -89,4 +89,9 @@ dependencies {
     
     // Core library desugaring for flutter_local_notifications
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
+    // AndroidX dependencies for modern features
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 }

@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'explore_controller.dart';
+part of 'language_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$exploreControllerHash() => r'3635fea969a5f32136c2aa16ac08786834ee0e7e';
+String _$languageControllerHash() =>
+    r'c1bbe2f2fe87a19f33bb2a3a338423785d508148';
 
-/// See also [ExploreController].
-@ProviderFor(ExploreController)
-final exploreControllerProvider =
-    AsyncNotifierProvider<ExploreController, ExploreScreenState>.internal(
-  ExploreController.new,
-  name: r'exploreControllerProvider',
+/// See also [LanguageController].
+@ProviderFor(LanguageController)
+final languageControllerProvider =
+    AsyncNotifierProvider<LanguageController, LanguageScreenState>.internal(
+  LanguageController.new,
+  name: r'languageControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$exploreControllerHash,
+      : _$languageControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ExploreController = AsyncNotifier<ExploreScreenState>;
+typedef _$LanguageController = AsyncNotifier<LanguageScreenState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

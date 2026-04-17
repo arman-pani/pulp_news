@@ -44,27 +44,28 @@ class BookmarkPage extends ConsumerWidget {
             ),
         ],
       ),
-      body: bookmarks.isEmpty
-          ? NoObjectsPlaceholder(
-              title: AppStrings.noBookmarks,
-              icon: Icons.bookmark_border,
-              subTitle: AppStrings.bookmarksDescription,
-            )
-          : ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
+      body: SafeArea(
+        top: false,
+        child: bookmarks.isEmpty
+            ? NoObjectsPlaceholder(
+                title: AppStrings.noBookmarks,
+                icon: Icons.bookmark_border,
+                subTitle: AppStrings.bookmarksDescription,
+              )
+            : ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                itemCount: bookmarks.length,
+                itemBuilder: (context, index) {
+                  final article = bookmarks[index];
+                  return NewsListTile(news: article);
+                },
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12.0),
               ),
-              itemCount: bookmarks.length,
-              itemBuilder: (context, index) {
-                final article = bookmarks[index];
-                return NewsListTile(news: article);
-              },
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: 12.0),
-            ),
+      ),
     );
   }
 }

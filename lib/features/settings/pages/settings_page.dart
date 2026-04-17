@@ -18,40 +18,43 @@ class SettingsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: CommonAppbar(title: AppStrings.settings),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-        children: [
-          SettingsTile(
-            leadingIcon: isDark ? Icons.dark_mode : Icons.light_mode,
-            title: AppStrings.themeSettings,
-            subtitle: isDark ? AppStrings.darkTheme : AppStrings.lightTheme,
-            trailing: Switch(
-              value: isDark,
-              onChanged: (value) => settingsService.toggleTheme(),
-              activeThumbColor: Theme.of(context).colorScheme.primary,
+      body: SafeArea(
+        top: false,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+          children: [
+            SettingsTile(
+              leadingIcon: isDark ? Icons.dark_mode : Icons.light_mode,
+              title: AppStrings.themeSettings,
+              subtitle: isDark ? AppStrings.darkTheme : AppStrings.lightTheme,
+              trailing: Switch(
+                value: isDark,
+                onChanged: (value) => settingsService.toggleTheme(),
+                activeThumbColor: Theme.of(context).colorScheme.primary,
+              ),
             ),
-          ),
-          SettingsTile(
-            leadingIcon: Icons.language,
-            title: AppStrings.selectLanguage,
-            subtitle: settingsService.languageDisplayName,
-            onTap: () => context.push(AppRoutes.language),
-          ),
-          SettingsTile(
-            leadingIcon: settingsState.notificationsEnabled
-                ? Icons.notifications
-                : Icons.notifications_off,
-            title: AppStrings.notificationSettings,
-            subtitle: AppStrings.notificationSettings,
-            trailing: Switch(
-              value: settingsState.notificationsEnabled,
-              onChanged: settingsState.isUpdatingNotifications
-                  ? null
-                  : (value) => settingsService.toggleNotifications(value),
-              activeThumbColor: Theme.of(context).colorScheme.primary,
+            SettingsTile(
+              leadingIcon: Icons.language,
+              title: AppStrings.selectLanguage,
+              subtitle: AppStrings.chooseLanguageDescription,
+              onTap: () => context.push(AppRoutes.updateLanguage),
             ),
-          ),
-        ],
+            SettingsTile(
+              leadingIcon: settingsState.notificationsEnabled
+                  ? Icons.notifications
+                  : Icons.notifications_off,
+              title: AppStrings.notificationSettings,
+              subtitle: AppStrings.notificationSettings,
+              trailing: Switch(
+                value: settingsState.notificationsEnabled,
+                onChanged: settingsState.isUpdatingNotifications
+                    ? null
+                    : (value) => settingsService.toggleNotifications(value),
+                activeThumbColor: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

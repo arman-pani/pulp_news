@@ -1,4 +1,4 @@
-import 'package:odiya_news_app/features/onboarding/models/language_option.dart';
+import 'package:odiya_news_app/features/language/models/language_option.dart';
 
 abstract class LanguagesDataSource {
   Future<List<LanguageOption>> fetchAvailableLanguages();
@@ -11,7 +11,7 @@ class SeededLanguagesDataSource implements LanguagesDataSource {
   Future<List<LanguageOption>> fetchAvailableLanguages() async {
     final languages = <LanguageOption>[
       const LanguageOption(
-        code: 'en',
+        code: 'english',
         displayName: 'English',
         nativeName: 'English',
         sortOrder: 1,
@@ -21,6 +21,12 @@ class SeededLanguagesDataSource implements LanguagesDataSource {
         displayName: 'Odia',
         nativeName: 'ଓଡ଼ିଆ',
         sortOrder: 2,
+      ),
+      const LanguageOption(
+        code: 'bengali',
+        displayName: 'Bengali',
+        nativeName: 'বাংলা',
+        sortOrder: 3,
       ),
     ];
 

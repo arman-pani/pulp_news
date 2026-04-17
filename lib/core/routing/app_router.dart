@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
+import 'package:odiya_news_app/core/screens/no_network_screen.dart';
 import 'package:odiya_news_app/core/widgets/bottom_nav_bar.dart';
 import 'package:odiya_news_app/features/home/screens/article_detail_page.dart';
 import 'package:odiya_news_app/features/home/screens/category_page.dart';
 import 'package:odiya_news_app/features/home/screens/home_page.dart';
 import 'package:odiya_news_app/features/feed/screens/feed_page.dart';
-import 'package:odiya_news_app/features/onboarding/screens/language_page.dart';
+import 'package:odiya_news_app/features/language/screens/language_setup_page.dart';
+import 'package:odiya_news_app/features/language/screens/update_language_page.dart';
 import 'package:odiya_news_app/features/onboarding/screens/onboarding_page.dart';
 import 'package:odiya_news_app/features/bookmark/presentation/bookmark_page.dart';
 import 'package:odiya_news_app/features/settings/pages/profile_page.dart';
@@ -38,18 +40,33 @@ class IndexPage extends StatelessWidget {
   }
 }
 
+String _resolveInitialRoute({
+  required bool completedOnboarding,
+  required bool isOnline,
+}) {
+  if (!isOnline && !completedOnboarding) return AppRoutes.noNetwork;
+  if (!completedOnboarding) return AppRoutes.onboarding;
+  return AppRoutes.feed;
+}
+
 class AppRouterHost {
-  AppRouterHost({required bool completedOnboarding})
+  AppRouterHost({required bool completedOnboarding, required bool isOnline})
     : rootNavigatorKey = GlobalKey<NavigatorState>(),
       homeNavigatorKey = GlobalKey<NavigatorState>(),
       profileNavigatorKey = GlobalKey<NavigatorState>(),
       feedNavigatorKey = GlobalKey<NavigatorState>() {
     router = GoRouter(
-      initialLocation: completedOnboarding
-          ? AppRoutes.feed
-          : AppRoutes.onboarding,
+      initialLocation: _resolveInitialRoute(
+        completedOnboarding: completedOnboarding,
+        isOnline: isOnline,
+      ),
       navigatorKey: rootNavigatorKey,
       routes: [
+        GoRoute(
+          path: AppRoutes.noNetwork,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: NoNetworkScreen()),
+        ),
         GoRoute(
           path: AppRoutes.onboarding,
           pageBuilder: (context, state) =>
@@ -58,7 +75,12 @@ class AppRouterHost {
         GoRoute(
           path: AppRoutes.language,
           pageBuilder: (context, state) =>
-              const NoTransitionPage(child: LanguagePage()),
+              const NoTransitionPage(child: LanguageSetupPage()),
+        ),
+        GoRoute(
+          path: AppRoutes.updateLanguage,
+          pageBuilder: (context, state) =>
+              const NoTransitionPage(child: UpdateLanguagePage()),
         ),
         GoRoute(
           path: AppRoutes.article,

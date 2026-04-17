@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$LanguageScreenState {
   List<LanguageOption> get languages => throw _privateConstructorUsedError;
+  String? get currentLanguageCode => throw _privateConstructorUsedError;
   String? get selectedLanguageCode => throw _privateConstructorUsedError;
   bool get isSubmitting => throw _privateConstructorUsedError;
 
@@ -33,6 +34,7 @@ abstract class $LanguageScreenStateCopyWith<$Res> {
   @useResult
   $Res call(
       {List<LanguageOption> languages,
+      String? currentLanguageCode,
       String? selectedLanguageCode,
       bool isSubmitting});
 }
@@ -51,6 +53,7 @@ class _$LanguageScreenStateCopyWithImpl<$Res, $Val extends LanguageScreenState>
   @override
   $Res call({
     Object? languages = null,
+    Object? currentLanguageCode = freezed,
     Object? selectedLanguageCode = freezed,
     Object? isSubmitting = null,
   }) {
@@ -59,6 +62,10 @@ class _$LanguageScreenStateCopyWithImpl<$Res, $Val extends LanguageScreenState>
           ? _value.languages
           : languages // ignore: cast_nullable_to_non_nullable
               as List<LanguageOption>,
+      currentLanguageCode: freezed == currentLanguageCode
+          ? _value.currentLanguageCode
+          : currentLanguageCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       selectedLanguageCode: freezed == selectedLanguageCode
           ? _value.selectedLanguageCode
           : selectedLanguageCode // ignore: cast_nullable_to_non_nullable
@@ -81,6 +88,7 @@ abstract class _$$LanguageScreenStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {List<LanguageOption> languages,
+      String? currentLanguageCode,
       String? selectedLanguageCode,
       bool isSubmitting});
 }
@@ -97,6 +105,7 @@ class __$$LanguageScreenStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? languages = null,
+    Object? currentLanguageCode = freezed,
     Object? selectedLanguageCode = freezed,
     Object? isSubmitting = null,
   }) {
@@ -105,6 +114,10 @@ class __$$LanguageScreenStateImplCopyWithImpl<$Res>
           ? _value._languages
           : languages // ignore: cast_nullable_to_non_nullable
               as List<LanguageOption>,
+      currentLanguageCode: freezed == currentLanguageCode
+          ? _value.currentLanguageCode
+          : currentLanguageCode // ignore: cast_nullable_to_non_nullable
+              as String?,
       selectedLanguageCode: freezed == selectedLanguageCode
           ? _value.selectedLanguageCode
           : selectedLanguageCode // ignore: cast_nullable_to_non_nullable
@@ -122,6 +135,7 @@ class __$$LanguageScreenStateImplCopyWithImpl<$Res>
 class _$LanguageScreenStateImpl implements _LanguageScreenState {
   const _$LanguageScreenStateImpl(
       {final List<LanguageOption> languages = const <LanguageOption>[],
+      this.currentLanguageCode,
       this.selectedLanguageCode,
       this.isSubmitting = false})
       : _languages = languages;
@@ -136,6 +150,8 @@ class _$LanguageScreenStateImpl implements _LanguageScreenState {
   }
 
   @override
+  final String? currentLanguageCode;
+  @override
   final String? selectedLanguageCode;
   @override
   @JsonKey()
@@ -143,7 +159,7 @@ class _$LanguageScreenStateImpl implements _LanguageScreenState {
 
   @override
   String toString() {
-    return 'LanguageScreenState(languages: $languages, selectedLanguageCode: $selectedLanguageCode, isSubmitting: $isSubmitting)';
+    return 'LanguageScreenState(languages: $languages, currentLanguageCode: $currentLanguageCode, selectedLanguageCode: $selectedLanguageCode, isSubmitting: $isSubmitting)';
   }
 
   @override
@@ -153,6 +169,8 @@ class _$LanguageScreenStateImpl implements _LanguageScreenState {
             other is _$LanguageScreenStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._languages, _languages) &&
+            (identical(other.currentLanguageCode, currentLanguageCode) ||
+                other.currentLanguageCode == currentLanguageCode) &&
             (identical(other.selectedLanguageCode, selectedLanguageCode) ||
                 other.selectedLanguageCode == selectedLanguageCode) &&
             (identical(other.isSubmitting, isSubmitting) ||
@@ -163,6 +181,7 @@ class _$LanguageScreenStateImpl implements _LanguageScreenState {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_languages),
+      currentLanguageCode,
       selectedLanguageCode,
       isSubmitting);
 
@@ -177,11 +196,14 @@ class _$LanguageScreenStateImpl implements _LanguageScreenState {
 abstract class _LanguageScreenState implements LanguageScreenState {
   const factory _LanguageScreenState(
       {final List<LanguageOption> languages,
+      final String? currentLanguageCode,
       final String? selectedLanguageCode,
       final bool isSubmitting}) = _$LanguageScreenStateImpl;
 
   @override
   List<LanguageOption> get languages;
+  @override
+  String? get currentLanguageCode;
   @override
   String? get selectedLanguageCode;
   @override

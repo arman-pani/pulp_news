@@ -43,16 +43,18 @@ class ProfilePage extends StatelessWidget {
         onTap: () => launchSourceUrl(AppStrings.privacyPolicyUrl, context),
       ),
     ];
-    return ListView.separated(
-      shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-      itemCount: tiles.length,
-      itemBuilder: (context, index) {
-        return tiles[index];
-      },
-      separatorBuilder: (context, index) {
-        return const Divider();
-      },
+    return SafeArea(
+      top: false,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+        itemCount: tiles.length,
+        itemBuilder: (context, index) {
+          return tiles[index];
+        },
+        separatorBuilder: (context, index) {
+          return const Divider();
+        },
+      ),
     );
   }
 }

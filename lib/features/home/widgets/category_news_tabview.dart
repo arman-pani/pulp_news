@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
-import 'package:odiya_news_app/features/home/controllers/explore_controller.dart';
+import 'package:odiya_news_app/features/home/controllers/home_controller.dart';
 import 'package:odiya_news_app/core/models/news_model.dart';
 import 'package:odiya_news_app/core/widgets/news_list_tile.dart';
 import 'package:odiya_news_app/core/widgets/no_objects_placeholder.dart';
 
 class CategoriesTabView extends StatelessWidget {
-  final ExploreScreenState state;
+  final HomeScreenState state;
 
   const CategoriesTabView({super.key, required this.state});
 

@@ -31,7 +31,7 @@ class SettingsService extends _$SettingsService {
     return SettingsState(
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       brightness: isDark ? Brightness.dark : Brightness.light,
-      selectedLanguage: settingsLocalService.getLanguage(),
+      selectedLanguage: settingsLocalService.getLanguageDisplayName(),
       notificationsEnabled: notificationsLocalService.getNotificationEnabled(),
     );
   }
@@ -52,11 +52,6 @@ class SettingsService extends _$SettingsService {
       brightness: mode == ThemeMode.dark ? Brightness.dark : Brightness.light,
     );
     ref.read(settingsLocalServiceProvider).setThemeMode(mode == ThemeMode.dark);
-  }
-
-  Future<void> changeLanguage(String language) async {
-    state = state.copyWith(selectedLanguage: language);
-    await ref.read(settingsLocalServiceProvider).setLanguage(language);
   }
 
   Future<void> toggleNotifications(bool value) async {
@@ -94,17 +89,6 @@ class SettingsService extends _$SettingsService {
     ref
         .read(appSnackbarServiceProvider)
         .showError('Failed to update notification settings. Please try again.');
-  }
-
-  String get languageDisplayName {
-    switch (state.selectedLanguage) {
-      case 'en':
-        return 'English';
-      case 'odia':
-        return 'Odia';
-      default:
-        return 'English';
-    }
   }
 
   String get notificationStatus =>

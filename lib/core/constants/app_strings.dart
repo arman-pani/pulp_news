@@ -19,9 +19,10 @@ class AppStrings {
   static const String chooseLanguage = 'Choose your language';
   static const String chooseLanguageDescription =
       'Pick the language you want to use for reading and app preferences.';
-  static const String english = 'English';
   static const String userFeedback = 'User Feedback';
   static const String userFeedbackDescription = 'Submit your suggestions';
+  static const String updateLanguage = 'Update Language';
+  static const String confirmChanges = 'Confirm Changes';
 
   // Theme Options
   static const String lightTheme = 'Light';
@@ -95,7 +96,6 @@ class AppStrings {
       'Failed to load languages. Please try again.';
   static const String selectLanguageToContinue =
       'Select a language to continue.';
-  static const String completeSetup = 'Complete Setup';
 
   // Trending News
   static const String trendingNews = 'Trending News';

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'explore_controller.dart';
+part of 'home_controller.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$ExploreScreenState {
+mixin _$HomeScreenState {
   List<String> get categories => throw _privateConstructorUsedError;
   List<NewsModel> get trendingNews => throw _privateConstructorUsedError;
   Map<String, List<NewsModel>> get categoryArticles =>
@@ -24,15 +24,15 @@ mixin _$ExploreScreenState {
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ExploreScreenStateCopyWith<ExploreScreenState> get copyWith =>
+  $HomeScreenStateCopyWith<HomeScreenState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ExploreScreenStateCopyWith<$Res> {
-  factory $ExploreScreenStateCopyWith(
-          ExploreScreenState value, $Res Function(ExploreScreenState) then) =
-      _$ExploreScreenStateCopyWithImpl<$Res, ExploreScreenState>;
+abstract class $HomeScreenStateCopyWith<$Res> {
+  factory $HomeScreenStateCopyWith(
+          HomeScreenState value, $Res Function(HomeScreenState) then) =
+      _$HomeScreenStateCopyWithImpl<$Res, HomeScreenState>;
   @useResult
   $Res call(
       {List<String> categories,
@@ -44,9 +44,9 @@ abstract class $ExploreScreenStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ExploreScreenStateCopyWithImpl<$Res, $Val extends ExploreScreenState>
-    implements $ExploreScreenStateCopyWith<$Res> {
-  _$ExploreScreenStateCopyWithImpl(this._value, this._then);
+class _$HomeScreenStateCopyWithImpl<$Res, $Val extends HomeScreenState>
+    implements $HomeScreenStateCopyWith<$Res> {
+  _$HomeScreenStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -96,11 +96,11 @@ class _$ExploreScreenStateCopyWithImpl<$Res, $Val extends ExploreScreenState>
 }
 
 /// @nodoc
-abstract class _$$ExploreScreenStateImplCopyWith<$Res>
-    implements $ExploreScreenStateCopyWith<$Res> {
-  factory _$$ExploreScreenStateImplCopyWith(_$ExploreScreenStateImpl value,
-          $Res Function(_$ExploreScreenStateImpl) then) =
-      __$$ExploreScreenStateImplCopyWithImpl<$Res>;
+abstract class _$$HomeScreenStateImplCopyWith<$Res>
+    implements $HomeScreenStateCopyWith<$Res> {
+  factory _$$HomeScreenStateImplCopyWith(_$HomeScreenStateImpl value,
+          $Res Function(_$HomeScreenStateImpl) then) =
+      __$$HomeScreenStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -114,11 +114,11 @@ abstract class _$$ExploreScreenStateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ExploreScreenStateImplCopyWithImpl<$Res>
-    extends _$ExploreScreenStateCopyWithImpl<$Res, _$ExploreScreenStateImpl>
-    implements _$$ExploreScreenStateImplCopyWith<$Res> {
-  __$$ExploreScreenStateImplCopyWithImpl(_$ExploreScreenStateImpl _value,
-      $Res Function(_$ExploreScreenStateImpl) _then)
+class __$$HomeScreenStateImplCopyWithImpl<$Res>
+    extends _$HomeScreenStateCopyWithImpl<$Res, _$HomeScreenStateImpl>
+    implements _$$HomeScreenStateImplCopyWith<$Res> {
+  __$$HomeScreenStateImplCopyWithImpl(
+      _$HomeScreenStateImpl _value, $Res Function(_$HomeScreenStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -129,7 +129,7 @@ class __$$ExploreScreenStateImplCopyWithImpl<$Res>
     Object? categoryArticles = null,
     Object? bundledArticles = freezed,
   }) {
-    return _then(_$ExploreScreenStateImpl(
+    return _then(_$HomeScreenStateImpl(
       categories: null == categories
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
@@ -152,8 +152,8 @@ class __$$ExploreScreenStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ExploreScreenStateImpl implements _ExploreScreenState {
-  const _$ExploreScreenStateImpl(
+class _$HomeScreenStateImpl implements _HomeScreenState {
+  const _$HomeScreenStateImpl(
       {final List<String> categories = const <String>[],
       final List<NewsModel> trendingNews = const <NewsModel>[],
       final Map<String, List<NewsModel>> categoryArticles =
@@ -195,14 +195,14 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
 
   @override
   String toString() {
-    return 'ExploreScreenState(categories: $categories, trendingNews: $trendingNews, categoryArticles: $categoryArticles, bundledArticles: $bundledArticles)';
+    return 'HomeScreenState(categories: $categories, trendingNews: $trendingNews, categoryArticles: $categoryArticles, bundledArticles: $bundledArticles)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExploreScreenStateImpl &&
+            other is _$HomeScreenStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
             const DeepCollectionEquality()
@@ -224,18 +224,17 @@ class _$ExploreScreenStateImpl implements _ExploreScreenState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ExploreScreenStateImplCopyWith<_$ExploreScreenStateImpl> get copyWith =>
-      __$$ExploreScreenStateImplCopyWithImpl<_$ExploreScreenStateImpl>(
+  _$$HomeScreenStateImplCopyWith<_$HomeScreenStateImpl> get copyWith =>
+      __$$HomeScreenStateImplCopyWithImpl<_$HomeScreenStateImpl>(
           this, _$identity);
 }
 
-abstract class _ExploreScreenState implements ExploreScreenState {
-  const factory _ExploreScreenState(
-          {final List<String> categories,
-          final List<NewsModel> trendingNews,
-          final Map<String, List<NewsModel>> categoryArticles,
-          final BundledArticlesResponse? bundledArticles}) =
-      _$ExploreScreenStateImpl;
+abstract class _HomeScreenState implements HomeScreenState {
+  const factory _HomeScreenState(
+      {final List<String> categories,
+      final List<NewsModel> trendingNews,
+      final Map<String, List<NewsModel>> categoryArticles,
+      final BundledArticlesResponse? bundledArticles}) = _$HomeScreenStateImpl;
 
   @override
   List<String> get categories;
@@ -247,6 +246,6 @@ abstract class _ExploreScreenState implements ExploreScreenState {
   BundledArticlesResponse? get bundledArticles;
   @override
   @JsonKey(ignore: true)
-  _$$ExploreScreenStateImplCopyWith<_$ExploreScreenStateImpl> get copyWith =>
+  _$$HomeScreenStateImplCopyWith<_$HomeScreenStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
 import 'package:odiya_news_app/core/widgets/try_again_placeholder.dart';
-import 'package:odiya_news_app/features/home/controllers/explore_controller.dart';
+import 'package:odiya_news_app/features/home/controllers/home_controller.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
 import 'package:odiya_news_app/features/home/widgets/trending_news.dart';
 import 'package:odiya_news_app/features/home/widgets/category_news_tabview.dart';
@@ -16,13 +16,13 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void navigateToSearch() => context.push(AppRoutes.search);
-    final exploreState = ref.watch(exploreControllerProvider);
+    final homeState = ref.watch(homeControllerProvider);
 
     return SafeArea(
-      child: exploreState.when(
+      child: homeState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, __) => TryAgainPlaceholder(
-          onRetry: () => ref.invalidate(exploreControllerProvider),
+          onRetry: () => ref.invalidate(homeControllerProvider),
         ),
         data: (state) {
           if (state.categoryArticles.isEmpty) {

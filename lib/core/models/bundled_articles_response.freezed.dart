@@ -215,6 +215,7 @@ BundledArticlesResponse _$BundledArticlesResponseFromJson(
 mixin _$BundledArticlesResponse {
   Map<String, BundledCategorySection> get categories =>
       throw _privateConstructorUsedError;
+  List<NewsModel> get trending => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_categories')
   int get totalCategories => throw _privateConstructorUsedError;
   @JsonKey(name: 'limit_per_category')
@@ -235,6 +236,7 @@ abstract class $BundledArticlesResponseCopyWith<$Res> {
   @useResult
   $Res call(
       {Map<String, BundledCategorySection> categories,
+      List<NewsModel> trending,
       @JsonKey(name: 'total_categories') int totalCategories,
       @JsonKey(name: 'limit_per_category') int limitPerCategory,
       bool success});
@@ -255,6 +257,7 @@ class _$BundledArticlesResponseCopyWithImpl<$Res,
   @override
   $Res call({
     Object? categories = null,
+    Object? trending = null,
     Object? totalCategories = null,
     Object? limitPerCategory = null,
     Object? success = null,
@@ -264,6 +267,10 @@ class _$BundledArticlesResponseCopyWithImpl<$Res,
           ? _value.categories
           : categories // ignore: cast_nullable_to_non_nullable
               as Map<String, BundledCategorySection>,
+      trending: null == trending
+          ? _value.trending
+          : trending // ignore: cast_nullable_to_non_nullable
+              as List<NewsModel>,
       totalCategories: null == totalCategories
           ? _value.totalCategories
           : totalCategories // ignore: cast_nullable_to_non_nullable
@@ -291,6 +298,7 @@ abstract class _$$BundledArticlesResponseImplCopyWith<$Res>
   @useResult
   $Res call(
       {Map<String, BundledCategorySection> categories,
+      List<NewsModel> trending,
       @JsonKey(name: 'total_categories') int totalCategories,
       @JsonKey(name: 'limit_per_category') int limitPerCategory,
       bool success});
@@ -310,6 +318,7 @@ class __$$BundledArticlesResponseImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? categories = null,
+    Object? trending = null,
     Object? totalCategories = null,
     Object? limitPerCategory = null,
     Object? success = null,
@@ -319,6 +328,10 @@ class __$$BundledArticlesResponseImplCopyWithImpl<$Res>
           ? _value._categories
           : categories // ignore: cast_nullable_to_non_nullable
               as Map<String, BundledCategorySection>,
+      trending: null == trending
+          ? _value._trending
+          : trending // ignore: cast_nullable_to_non_nullable
+              as List<NewsModel>,
       totalCategories: null == totalCategories
           ? _value.totalCategories
           : totalCategories // ignore: cast_nullable_to_non_nullable
@@ -342,10 +355,12 @@ class _$BundledArticlesResponseImpl implements _BundledArticlesResponse {
   const _$BundledArticlesResponseImpl(
       {final Map<String, BundledCategorySection> categories =
           const <String, BundledCategorySection>{},
+      final List<NewsModel> trending = const <NewsModel>[],
       @JsonKey(name: 'total_categories') this.totalCategories = 0,
       @JsonKey(name: 'limit_per_category') this.limitPerCategory = 0,
       this.success = false})
-      : _categories = categories;
+      : _categories = categories,
+        _trending = trending;
 
   factory _$BundledArticlesResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$BundledArticlesResponseImplFromJson(json);
@@ -357,6 +372,15 @@ class _$BundledArticlesResponseImpl implements _BundledArticlesResponse {
     if (_categories is EqualUnmodifiableMapView) return _categories;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_categories);
+  }
+
+  final List<NewsModel> _trending;
+  @override
+  @JsonKey()
+  List<NewsModel> get trending {
+    if (_trending is EqualUnmodifiableListView) return _trending;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_trending);
   }
 
   @override
@@ -371,7 +395,7 @@ class _$BundledArticlesResponseImpl implements _BundledArticlesResponse {
 
   @override
   String toString() {
-    return 'BundledArticlesResponse(categories: $categories, totalCategories: $totalCategories, limitPerCategory: $limitPerCategory, success: $success)';
+    return 'BundledArticlesResponse(categories: $categories, trending: $trending, totalCategories: $totalCategories, limitPerCategory: $limitPerCategory, success: $success)';
   }
 
   @override
@@ -381,6 +405,7 @@ class _$BundledArticlesResponseImpl implements _BundledArticlesResponse {
             other is _$BundledArticlesResponseImpl &&
             const DeepCollectionEquality()
                 .equals(other._categories, _categories) &&
+            const DeepCollectionEquality().equals(other._trending, _trending) &&
             (identical(other.totalCategories, totalCategories) ||
                 other.totalCategories == totalCategories) &&
             (identical(other.limitPerCategory, limitPerCategory) ||
@@ -393,6 +418,7 @@ class _$BundledArticlesResponseImpl implements _BundledArticlesResponse {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_categories),
+      const DeepCollectionEquality().hash(_trending),
       totalCategories,
       limitPerCategory,
       success);
@@ -415,6 +441,7 @@ class _$BundledArticlesResponseImpl implements _BundledArticlesResponse {
 abstract class _BundledArticlesResponse implements BundledArticlesResponse {
   const factory _BundledArticlesResponse(
       {final Map<String, BundledCategorySection> categories,
+      final List<NewsModel> trending,
       @JsonKey(name: 'total_categories') final int totalCategories,
       @JsonKey(name: 'limit_per_category') final int limitPerCategory,
       final bool success}) = _$BundledArticlesResponseImpl;
@@ -424,6 +451,8 @@ abstract class _BundledArticlesResponse implements BundledArticlesResponse {
 
   @override
   Map<String, BundledCategorySection> get categories;
+  @override
+  List<NewsModel> get trending;
   @override
   @JsonKey(name: 'total_categories')
   int get totalCategories;

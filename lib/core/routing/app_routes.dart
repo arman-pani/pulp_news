@@ -1,6 +1,8 @@
 class AppRoutes {
+  static const String noNetwork = '/no_network';
   static const String onboarding = '/onboarding';
   static const String language = '/language';
+  static const String updateLanguage = '/updateLanguage';
   static const String home = '/home';
   static const String feed = '/feed';
   static const String bookmark = '/bookmark';

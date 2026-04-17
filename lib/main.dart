@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,11 +16,15 @@ import 'package:odiya_news_app/core/providers/app_providers.dart';
 import 'package:odiya_news_app/core/routing/app_router.dart';
 import 'package:odiya_news_app/core/services/app_snackbar_service.dart';
 import 'package:odiya_news_app/core/utils/helper_methods.dart';
+import 'package:odiya_news_app/core/utils/network_check.dart';
 import 'package:odiya_news_app/features/settings/controllers/settings_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // Keep the native splash screen up until we finish boot.
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Load environment variables before anything else
   await dotenv.load(fileName: '.env');
@@ -31,7 +36,14 @@ void main() async {
   final settingsLocalService = SettingsLocalService(hiveBootstrap);
   final tokenStorage = await TokenStorage().init();
   final onboardingCompleted = settingsLocalService.getOnboardingCompleted();
-  final appRouter = AppRouterHost(completedOnboarding: onboardingCompleted);
+
+  // Check network reachability before making any backend calls.
+  final isOnline = await hasNetworkConnection();
+
+  final appRouter = AppRouterHost(
+    completedOnboarding: onboardingCompleted,
+    isOnline: isOnline,
+  );
   final rootScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   final appSnackbarService = AppSnackbarService(rootScaffoldMessengerKey);
 
@@ -44,7 +56,12 @@ void main() async {
     ],
   );
 
-  await appContainer.read(authServiceProvider).init();
+  // Only create/refresh a guest session for returning users (token already
+  // in secure storage). New users get their session in OnboardingPage, just
+  // before navigating to the language page.
+  if (onboardingCompleted) {
+    await appContainer.read(authServiceProvider).init();
+  }
   final initializationStatus = await MobileAds.instance.initialize();
   debugPrint(
     '[Ads] Mobile Ads initialized.'
@@ -53,6 +70,9 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  // All boot work done — dismiss the native splash.
+  FlutterNativeSplash.remove();
 
   runApp(
     UncontrolledProviderScope(container: appContainer, child: const MyApp()),
@@ -72,7 +92,14 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
     AdUnitIds.logResolvedConfig();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(ref.read(fcmServiceProvider).initializeIfNeeded());
+      // Only initialize FCM for users who have completed onboarding.
+      // New users get FCM initialized inside LanguageController.completeSetup().
+      final onboardingDone = ref
+          .read(settingsLocalServiceProvider)
+          .getOnboardingCompleted();
+      if (onboardingDone) {
+        unawaited(ref.read(fcmServiceProvider).initializeIfNeeded());
+      }
       final context = ref.read(appRouterProvider).currentContext;
       if (context != null && context.mounted) {
         unawaited(checkAppVersion(context));
@@ -84,30 +111,14 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     final settingsState = ref.watch(settingsServiceProvider);
 
-    return Builder(
-      builder: (context) {
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: Colors.white,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.light,
-            systemNavigationBarColor: Colors.white,
-            systemNavigationBarDividerColor: Colors.white,
-            systemNavigationBarIconBrightness: Brightness.light,
-          ),
-          child: MaterialApp.router(
-            title: 'Pulp News',
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: settingsState.themeMode,
-            routerConfig: ref.watch(appRouterProvider).router,
-            scaffoldMessengerKey: ref
-                .read(appSnackbarServiceProvider)
-                .messengerKey,
-            debugShowCheckedModeBanner: false,
-          ),
-        );
-      },
+    return MaterialApp.router(
+      title: 'Pulp News',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: settingsState.themeMode,
+      routerConfig: ref.watch(appRouterProvider).router,
+      scaffoldMessengerKey: ref.read(appSnackbarServiceProvider).messengerKey,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

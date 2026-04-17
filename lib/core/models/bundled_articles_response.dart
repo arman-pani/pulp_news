@@ -25,6 +25,7 @@ class BundledArticlesResponse with _$BundledArticlesResponse {
   const factory BundledArticlesResponse({
     @Default(<String, BundledCategorySection>{})
     Map<String, BundledCategorySection> categories,
+    @Default(<NewsModel>[]) List<NewsModel> trending,
     @JsonKey(name: 'total_categories') @Default(0) int totalCategories,
     @JsonKey(name: 'limit_per_category') @Default(0) int limitPerCategory,
     @Default(false) bool success,

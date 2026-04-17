@@ -69,10 +69,16 @@ class WebViewPage extends ConsumerWidget {
         ],
       ),
       body: webState.errorMessage.isNotEmpty
-          ? _buildErrorWidget(context, controller)
+          ? SafeArea(top: false, child: _buildErrorWidget(context, controller))
           : webState.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : WebViewWidget(controller: controller.webViewController),
+          ? const SafeArea(
+              top: false,
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : SafeArea(
+              top: false,
+              child: WebViewWidget(controller: controller.webViewController),
+            ),
     );
   }
 

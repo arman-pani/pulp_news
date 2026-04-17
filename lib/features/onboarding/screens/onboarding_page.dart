@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odiya_news_app/core/constants/app_strings.dart';
+import 'package:odiya_news_app/core/providers/app_providers.dart';
 import 'package:odiya_news_app/core/routing/app_routes.dart';
 import 'package:odiya_news_app/features/onboarding/models/feature_data.dart';
 import 'package:odiya_news_app/features/onboarding/widgets/feature_column.dart';
 import 'package:odiya_news_app/features/onboarding/widgets/page_indicator.dart';
 
-class OnboardingPage extends StatefulWidget {
+class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
 
   @override
-  State<OnboardingPage> createState() => _OnboardingPageState();
+  ConsumerState<OnboardingPage> createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> {
+class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  bool _isNavigating = false;
 
   @override
   void dispose() {
@@ -49,11 +52,48 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildOnboardingView());
+    return Scaffold(
+      body: Stack(
+        children: [
+          _buildOnboardingView(),
+          if (_isNavigating)
+            Container(
+              color: Colors.black.withValues(alpha: 0.5),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
-  void _openLanguageSelection() {
-    context.goNamed(AppRoutes.language);
+  Future<void> _openLanguageSelection() async {
+    if (_isNavigating) return;
+
+    setState(() => _isNavigating = true);
+
+    try {
+      final authService = ref.read(authServiceProvider);
+      // Create guest session if not already existing
+      if (!authService.hasSession) {
+        await authService.init();
+      }
+
+      if (mounted) {
+        context.go(AppRoutes.language);
+      }
+    } catch (e) {
+      if (mounted) {
+        ref.read(appSnackbarServiceProvider).showError(
+              'Could not connect. Please try again.',
+            );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isNavigating = false);
+      }
+    }
   }
 
   Widget _buildOnboardingView() {
@@ -79,13 +119,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           TextButton(
-            onPressed: _skipOnboarding,
+            onPressed: _isNavigating ? null : _skipOnboarding,
             child: Text(
               AppStrings.skip,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
+                    color: _isNavigating
+                        ? Theme.of(context).disabledColor
+                        : Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
           ),
         ],
@@ -119,7 +161,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     if (_currentPage == 0) return const SizedBox(width: 80);
 
     return TextButton.icon(
-      onPressed: _previousPage,
+      onPressed: _isNavigating ? null : _previousPage,
       icon: const Icon(Icons.arrow_back_ios, size: 16),
       label: const Text(AppStrings.back),
     );
@@ -138,3 +180,4 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 }
+

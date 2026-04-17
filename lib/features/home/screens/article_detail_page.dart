@@ -10,8 +10,8 @@ class ArticleDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 40.0),
+      body: SafeArea(
+        top: false,
         child: NewsCard(article: article, isBack: true),
       ),
     );

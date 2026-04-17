@@ -58,52 +58,55 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CommonAppbar(title: AppStrings.search),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: CustomSearchBar(
-              controller: _searchController,
-              focusNode: _searchFocusNode,
-              hintText: AppStrings.searchHint,
-              onSubmitted: (query) {
-                if (query.trim().isNotEmpty) {
-                  unawaited(
-                    controller.searchArticles(query).catchError((_) {}),
-                  );
-                }
-              },
-              onClear: () {
-                _searchController.clear();
-                controller.clearSearch();
-              },
-              padding: const EdgeInsets.all(16.0),
+      body: SafeArea(
+        top: false,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: CustomSearchBar(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                hintText: AppStrings.searchHint,
+                onSubmitted: (query) {
+                  if (query.trim().isNotEmpty) {
+                    unawaited(
+                      controller.searchArticles(query).catchError((_) {}),
+                    );
+                  }
+                },
+                onClear: () {
+                  _searchController.clear();
+                  controller.clearSearch();
+                },
+                padding: const EdgeInsets.all(16.0),
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: controller.shouldShowRecentSearches
-                ? RecentSearches(
-                    recentSearches: state.recentSearches,
-                    onClearAll: controller.clearRecentSearches,
-                    onTapSearch: (search) {
-                      _searchController.text = search;
-                      unawaited(
-                        controller.searchArticles(search).catchError((_) {}),
-                      );
-                    },
-                  )
-                : SearchResults(
-                    state: state,
-                    onRefresh: () async {
-                      final query = _searchController.text;
-                      if (query.isNotEmpty) {
-                        await controller
-                            .searchArticles(query)
-                            .catchError((_) {});
-                      }
-                    },
-                  ),
-          ),
-        ],
+            SliverToBoxAdapter(
+              child: controller.shouldShowRecentSearches
+                  ? RecentSearches(
+                      recentSearches: state.recentSearches,
+                      onClearAll: controller.clearRecentSearches,
+                      onTapSearch: (search) {
+                        _searchController.text = search;
+                        unawaited(
+                          controller.searchArticles(search).catchError((_) {}),
+                        );
+                      },
+                    )
+                  : SearchResults(
+                      state: state,
+                      onRefresh: () async {
+                        final query = _searchController.text;
+                        if (query.isNotEmpty) {
+                          await controller
+                              .searchArticles(query)
+                              .catchError((_) {});
+                        }
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
